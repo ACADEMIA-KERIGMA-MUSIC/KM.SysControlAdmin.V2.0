@@ -12,6 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\KM.SysControlAdmin.BL\KM.SysControlAdmin.BL.csproj" />
     <ProjectReference Include="..\KM.SysControlAdmin.Core\KM.SysControlAdmin.Core.csproj" />
     <ProjectReference Include="..\KM.SysControlAdmin.EN\KM.SysControlAdmin.EN.csproj" />
