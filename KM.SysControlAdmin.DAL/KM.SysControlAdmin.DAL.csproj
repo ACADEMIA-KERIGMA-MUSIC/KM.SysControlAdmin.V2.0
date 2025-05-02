@@ -15,4 +15,8 @@
     <ProjectReference Include="..\KM.SysControlAdmin.EN\KM.SysControlAdmin.EN.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Document\" />
+  </ItemGroup>
+
 </Project>
