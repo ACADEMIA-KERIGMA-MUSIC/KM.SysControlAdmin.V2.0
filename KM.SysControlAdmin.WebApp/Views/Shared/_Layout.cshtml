@@ -1,21 +1,103 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - KM.SysControlAdmin.WebApp</title>
-
+    <title>@ViewData["Title"] - Kerigma Music</title>
     <link rel="stylesheet" href="~/KM.SysControlAdmin.WebApp.styles.css" asp-append-version="true" />
+
+    <link rel="icon" href="~/assets/img/logos/Icon Kerigma Music.png" type="image/x-icon">
+    <link href="~/css/styles.css" rel="stylesheet" />
+
+    <script src="~/js/fontawesome.js"></script>
 </head>
 <body>
     
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-1" style="color:white" asp-area="" asp-controller="Home" asp-action="Index"><img src="/assets/img/logos/Icon Kerigma Music.png" width="20" style="margin-right:3px; margin-left:25px; margin-bottom:3px" alt="Logo" /> Kerigma Music</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group" hidden>
+                <input class="form-control" type="text" placeholder="Buscar..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" id="logoutLink" href="#!">Cerrar Sesion</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer" style="text-align:center">
+                    <div class="small"><strong>Nivel de Acceso:</strong></div>
+                    Proximamente...
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <div>
+                        <main role="main">
+                            @RenderBody()
+                        </main>
+                    </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">
+                            Copyright &copy; Desarrollado Por Hector Garcia <span id="currentYear"></span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('logoutLink').addEventListener('click', function () {
+                Swal.fire({
+                    title: '¿Está seguro de que desea Cerrar Sesión?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, Cerrar Sesión',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '@Url.Action("Logout", "User")';
+                    }
+                });
+            });
+        });
+    </script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/boostrap5.js" crossorigin="anonymous"></script>
+    <script src="~/js/scripts.js"></script>
+    <script>
+        // Obtiene el año actual y lo inserta en el elemento con id "currentYear"
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
+
     
     @await RenderSectionAsync("Scripts", required: false)
 </body>
