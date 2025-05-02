@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 // Referencias Necesarias Para El Correcto Funcionamiento
 using Microsoft.EntityFrameworkCore;
+using KM.SysControlAdmin.EN.Role___EN;
 
 
 #endregion
@@ -16,14 +17,14 @@ namespace KM.SysControlAdmin.DAL
     {
         #region REFERENCIAS DE TABLAS DE LA BD
         //Coleccion que hace referencia a las tablas de la base de datos
-
+        public DbSet<Role> Role { get; set; }
         #endregion
 
         #region STRING DE CONEXION
         // Metodo de Conexion a la Base de Datos
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@""); // String de Conexion
+            optionsBuilder.UseSqlServer(@"Data Source=localhost;Initial Catalog=KMSysControlAdminDB;Integrated Security=True;Trust Server Certificate=True"); // String de Conexion
         }
         #endregion
     }
