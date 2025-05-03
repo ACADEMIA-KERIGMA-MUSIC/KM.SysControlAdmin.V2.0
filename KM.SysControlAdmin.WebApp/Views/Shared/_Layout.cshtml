@@ -33,7 +33,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" id="logoutLink" href="#!">Cerrar Sesion</a></li>
+                    <li><a class="dropdown-item" id="logoutLink" href="#!">Cerrar Sesión</a></li>
                 </ul>
             </li>
         </ul>
@@ -44,6 +44,12 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        <!-- Seccion Principal-->
+                        <div class="sb-sidenav-menu-heading">Principal</div>
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                            <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                            Inicio
+                        </a>
                         <!-- Seccion Seguridad-->
                         <div class="sb-sidenav-menu-heading">Seguridad</div>
                         <a class="nav-link" asp-area="" asp-controller="Role" asp-action="Index">
