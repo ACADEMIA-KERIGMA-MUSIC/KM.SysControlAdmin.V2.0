@@ -22,5 +22,29 @@ namespace KM.SysControlAdmin.BL.Role___BL
             return await RoleDAL.CreateAsync(role);
         }
         #endregion
+
+        #region METODO PARA MOSTRAR TODOS
+        // Metodo Para Listar y Mostrar Todos Los Resultados
+        public async Task<List<Role>> GetAllAsync()
+        {
+            return await RoleDAL.GetAllAsync();
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Obtener Un Registro Por Su Id
+        public async Task<Role> GetByIdAsync(Role role)
+        {
+            return await RoleDAL.GetByIdAsync(role);
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registro Existentes En La Base De Datos
+        public async Task<List<Role>> SearchAsync(Role role)
+        {
+            return await RoleDAL.SearchAsync(role);
+        }
+        #endregion
     }
 }

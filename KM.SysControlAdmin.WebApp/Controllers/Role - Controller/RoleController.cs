@@ -3,6 +3,7 @@
 using KM.SysControlAdmin.BL.Role___BL;
 using KM.SysControlAdmin.Core.Utils;
 using KM.SysControlAdmin.EN.Role___EN;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -42,6 +43,18 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Role___Controller
                 ViewBag.Error = ex.Message;
                 return View(role);
             }
+        }
+        #endregion
+
+        #region METODO PARA INDEX
+        // Metodo Para Mostrar La Vista Index
+        public async Task<IActionResult> Index(Role role = null!)
+        {
+            if (role == null)
+                role = new Role();
+
+            var roles = await roleBL.SearchAsync(role);
+            return View(roles);
         }
         #endregion
     }

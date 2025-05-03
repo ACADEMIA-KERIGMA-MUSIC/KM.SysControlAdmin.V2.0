@@ -46,5 +46,62 @@ namespace KM.SysControlAdmin.DAL.Role___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA MOSTRAR TODOS
+        // Metodo Para Listar y Mostrar Todos Los Resultados
+        public static async Task<List<Role>> GetAllAsync()
+        {
+            var roles = new List<Role>();
+            using (var dbContext = new ContextDB())
+            {
+                roles = await dbContext.Role.ToListAsync();
+            }
+            return roles;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Obtener Un Registro Por Su Id
+        public static async Task<Role> GetByIdAsync(Role role)
+        {
+            var roleDb = new Role();
+            using (var dbContext = new ContextDB())
+            {
+                roleDb = await dbContext.Role.FirstOrDefaultAsync(r => r.Id == role.Id);
+            }
+            return roleDb!;
+        }
+        #endregion
+
+        #region METODO PARA FILTRAR BUSQUEDA
+        // Metodo Para Filtrar La Busqueda Por Parametros
+        internal static IQueryable<Role> QuerySelect(IQueryable<Role> query, Role role)
+        {
+            if (role.Id > 0)
+                query = query.Where(r => r.Id == role.Id);
+
+            if (!string.IsNullOrWhiteSpace(role.Name))
+                query = query.Where(r => r.Name.Contains(role.Name));
+
+            query = query.OrderByDescending(r => r.Id);
+
+            return query;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registros Existentes En La Base De Datos
+        public static async Task<List<Role>> SearchAsync(Role role)
+        {
+            var roles = new List<Role>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.Role.AsQueryable();
+                select = QuerySelect(select, role);
+                roles = await select.ToListAsync();
+            }
+            return roles;
+        }
+        #endregion
     }
 }
