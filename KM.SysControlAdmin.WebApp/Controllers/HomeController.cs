@@ -1,6 +1,9 @@
-using System.Diagnostics;
-using KM.SysControlAdmin.WebApp.Models;
+#region REFERENCIAS
+// Referencias Necesarias Para El Correcto Funcionamiento
 using Microsoft.AspNetCore.Mvc;
+
+
+#endregion
 
 namespace KM.SysControlAdmin.WebApp.Controllers
 {
