@@ -27,7 +27,7 @@
                 </select>
             `,
             showCancelButton: true,
-            confirmButtonText: 'Guardar Cambios',
+            confirmButtonText: 'Continuar',
             cancelButtonText: 'Cancelar',
             reverseButtons: true,
             preConfirm: () => {
@@ -51,9 +51,24 @@
             return;
         }
 
-        document.getElementById('Name').value = formValues.name;
-        document.getElementById('Status').value = formValues.status;
-        document.getElementById('Form').submit();
+        // Confirmar antes de enviar
+        const confirmResult = await Swal.fire({
+            title: '¿Guardar cambios?',
+            text: `¿Estás seguro de modificar este rol?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, Modificar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        });
+
+        if (confirmResult.isConfirmed) {
+            document.getElementById('Name').value = formValues.name;
+            document.getElementById('Status').value = formValues.status;
+            document.getElementById('Form').submit();
+        } else {
+            window.location.href = '@Url.Action("Index", "Role")';
+        }
     }
 
     window.onload = ShowEditPrompt;
