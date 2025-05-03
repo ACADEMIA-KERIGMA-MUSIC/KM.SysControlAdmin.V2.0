@@ -132,5 +132,25 @@ namespace KM.SysControlAdmin.DAL.Role___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public static async Task<int> DeleteAsync(Role role)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var roleDb = await dbContext.Role.FirstOrDefaultAsync(r => r.Id == role.Id);
+                if (roleDb != null)
+                {
+                    dbContext.Role.Remove(roleDb);
+                    result = await dbContext.SaveChangesAsync();
+                }
+                else
+                    throw new Exception("Rol no encontrado.");
+            }
+            return result;
+        }
+        #endregion
     }
 }

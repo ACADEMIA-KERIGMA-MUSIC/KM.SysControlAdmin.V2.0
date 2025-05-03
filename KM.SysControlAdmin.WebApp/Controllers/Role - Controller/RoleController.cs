@@ -86,5 +86,33 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Role___Controller
             }
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Mostrar La Vista De Eliminar
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            var role = await roleBL.GetByIdAsync(new Role { Id = id });
+            ViewBag.Error = "";
+            return View(role);
+        }
+
+        // Metodo Que Recibe y Envia a La Base De Datos
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteRole(int id, Role role)
+        {
+            try
+            {
+                int result = await roleBL.DeleteAsync(role);
+                TempData["SuccessMessageDelete"] = "Rol Eliminado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(role);
+            }
+        }
+        #endregion
     }
 }

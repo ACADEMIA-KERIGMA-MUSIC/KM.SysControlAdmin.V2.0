@@ -1,0 +1,68 @@
+﻿@model KM.SysControlAdmin.EN.Role___EN.Role
+
+@{
+    ViewData["Title"] = "Eliminar Rol";
+}
+
+<br />
+<h1>Formulario Eliminar Rol</h1>
+<br />
+<p>¿Estás seguro de eliminar este registro? No podrás revertir esta acción.</p>
+<span>@ViewBag.Error</span>
+<hr />
+
+<script>
+    async function ShowDeletePrompt() {
+        const result = await Swal.fire({
+            title: `Eliminar Rol: ${'@Model.Name'}`,
+            text: '¿Estás seguro de eliminar este registro? No podrás revertir esta acción.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            ConfirmFinalDelete();
+        } else {
+            window.location.href = '@Url.Action("Index", "Role")';
+        }
+    }
+
+    async function ConfirmFinalDelete() {
+        const result = await Swal.fire({
+            title: 'Confirmar Eliminación',
+            text: 'Esta acción es irreversible. ¿Deseas continuar?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, Eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            document.getElementById('Id').value = '@Model.Id';
+            document.getElementById('Form').submit();
+        }
+    }
+
+    window.onload = ShowDeletePrompt;
+
+    function showErrorAlert(message) {
+        Swal.fire({
+            title: 'Error',
+            text: message,
+            icon: 'error'
+        });
+    }
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        @:showErrorAlert('@ViewBag.Error');
+    }
+</script>
+
+<form asp-action="DeleteRole" id="Form">
+    <input type="hidden" name="Id" asp-for="Id" />
+</form>

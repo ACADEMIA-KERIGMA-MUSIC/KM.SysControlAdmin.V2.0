@@ -54,5 +54,13 @@ namespace KM.SysControlAdmin.BL.Role___BL
             return await RoleDAL.UpdateAsync(role);
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public async Task<int> DeleteAsync(Role role)
+        {
+            return await RoleDAL.DeleteAsync(role);
+        }
+        #endregion
     }
 }
