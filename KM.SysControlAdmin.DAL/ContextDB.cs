@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 // Referencias Necesarias Para El Correcto Funcionamiento
 using Microsoft.EntityFrameworkCore;
 using KM.SysControlAdmin.EN.Role___EN;
+using KM.SysControlAdmin.EN.User___EN;
 
 
 #endregion
@@ -18,6 +19,7 @@ namespace KM.SysControlAdmin.DAL
         #region REFERENCIAS DE TABLAS DE LA BD
         //Coleccion que hace referencia a las tablas de la base de datos
         public DbSet<Role> Role { get; set; }
+        public DbSet<User> User { get; set; }
         #endregion
 
         #region STRING DE CONEXION
