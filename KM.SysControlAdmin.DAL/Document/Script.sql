@@ -9,3 +9,11 @@ CREATE TABLE [Role](
 	DateCreated DATETIME NOT NULL,
 	DateModification DATETIME NOT NULL
 );
+GO
+    INSERT INTO [Role] VALUES('Desarrollador');
+	INSERT INTO [Role] VALUES('Administrador');
+	INSERT INTO [Role] VALUES('Instructor');
+    INSERT INTO [Role] VALUES('Alumno/a');
+    INSERT INTO [Role] VALUES('Secretario/a');
+	INSERT INTO [Role] VALUES('Invitado');
+GO
