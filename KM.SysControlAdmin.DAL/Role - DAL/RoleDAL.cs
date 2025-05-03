@@ -103,5 +103,34 @@ namespace KM.SysControlAdmin.DAL.Role___DAL
             return roles;
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Modificar Un Registro Existente En La Base De Datos
+        public static async Task<int> UpdateAsync(Role role)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var roleDb = await dbContext.Role.FirstOrDefaultAsync(r => r.Id == role.Id);
+                if (roleDb != null)
+                {
+                    bool rolExists = await ExistRol(role, dbContext);
+                    if (rolExists == false)
+                    {
+                        roleDb.Name = role.Name;
+                        roleDb.Status = role.Status;
+                        roleDb.DateModification = role.DateModification;
+                        dbContext.Role.Update(roleDb);
+                        result = await dbContext.SaveChangesAsync();
+                    }
+                    else
+                        throw new Exception("Rol Ya Existente, Vuelve a Intentarlo");
+                }
+                else
+                    throw new Exception("Rol no encontrado.");
+            }
+            return result;
+        }
+        #endregion
     }
 }

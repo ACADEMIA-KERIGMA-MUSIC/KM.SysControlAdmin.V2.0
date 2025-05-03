@@ -1,0 +1,79 @@
+﻿@model KM.SysControlAdmin.EN.Role___EN.Role
+
+@{
+    ViewData["Title"] = "Editar Rol";
+}
+
+<br />
+<h1>Formulario Editar Rol</h1>
+<span>@ViewBag.Error</span>
+<hr />
+
+<script>
+    async function ShowEditPrompt() {
+        const { value: formValues } = await Swal.fire({
+            title: 'Formulario Editar Rol',
+            html: `
+                <label for="name"><strong>Nombre del Rol Actual:</strong></label>
+                <input id="name" class="swal2-input" type="text" value="@Model.Name" placeholder="Ingresar nombre">
+                <br />
+                <br />
+                <label for="status"><strong>Estado:</strong></label>
+                <br />
+                <select id="status" class="swal2-select">
+                    <option value="0">Seleccionar</option>
+                    <option value="1" ${@Model.Status == 1 ? "selected" : ""}>Activo</option>
+                    <option value="2" ${@Model.Status == 2 ? "selected" : ""}>Inactivo</option>
+                </select>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Guardar Cambios',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true,
+            preConfirm: () => {
+                const name = document.getElementById('name').value.trim();
+                const status = document.getElementById('status').value;
+
+                if (!name) {
+                    Swal.showValidationMessage('Por favor, ingresa un nombre válido.');
+                } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ/ ]+$/.test(name)) {
+                    Swal.showValidationMessage('Solo se permiten letras y espacios en el nombre.');
+                } else if (status == "0") {
+                    Swal.showValidationMessage('Por favor, selecciona un estado.');
+                } else {
+                    return { name, status };
+                }
+            }
+        });
+
+        if (!formValues) {
+            window.location.href = '@Url.Action("Index", "Role")';
+            return;
+        }
+
+        document.getElementById('Name').value = formValues.name;
+        document.getElementById('Status').value = formValues.status;
+        document.getElementById('Form').submit();
+    }
+
+    window.onload = ShowEditPrompt;
+
+    function showErrorAlert(message) {
+        Swal.fire({
+            title: 'Error',
+            text: message,
+            icon: 'error'
+        });
+    }
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        @:showErrorAlert('@ViewBag.Error');
+    }
+</script>
+
+<form asp-action="EditRole" id="Form">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" id="Name" name="Name" value="@Model.Name" />
+    <input type="hidden" id="Status" name="Status" value="@Model.Status" />
+</form>
