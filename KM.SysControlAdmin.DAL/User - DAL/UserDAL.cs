@@ -87,5 +87,107 @@ namespace KM.SysControlAdmin.DAL.User___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA MOSTRAR TODOS
+        // Metodo Para Listar y Mostrar Todos Los Resultados
+        public static async Task<List<User>> GetAllAsync()
+        {
+            var users = new List<User>();
+            using (var dbContext = new ContextDB())
+            {
+                users = await dbContext.User.ToListAsync();
+            }
+            return users;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Obtener Un Registro Por Su Id
+        public static async Task<User> GetByIdAsync(User user)
+        {
+            var userDb = new User();
+            using (var dbContext = new ContextDB())
+            {
+                userDb = await dbContext.User.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == user.Id);
+            }
+            return userDb!;
+        }
+
+        // EL METODO DE COMENTADO ES LA FORMA BASICA Y FACIL DEL METODO, EL DE ARRIBA ESTA MEJORADO SEGUN LAS NECESIDADES DE ALGUN PROCESO CON ESE METODO
+        //public static async Task<User> GetByIdAsync(User user)
+        //{
+        //    var userDb = new User();
+        //    using (var dbContext = new ContextDB())
+        //    {
+        //        userDb = await dbContext.User.FirstOrDefaultAsync(u => u.Id == user.Id);
+        //    }
+        //    return userDb!;
+        //}
+        #endregion
+
+        #region METODO PARA FILTRAR EN BASE A PARAMETROS
+        // Metodo Para Filtrar Resultados De La Busqueda En Base a Parametros 
+        internal static IQueryable<User> QuerySelect(IQueryable<User> query, User user)
+        {
+            if (user.Id > 0)
+                query = query.Where(u => u.Id == user.Id);
+
+            if (user.IdRole > 0)
+                query = query.Where(u => u.IdRole == user.IdRole);
+
+            if (!string.IsNullOrWhiteSpace(user.Name))
+                query = query.Where(u => u.Name.Contains(user.Name));
+
+            if (!string.IsNullOrWhiteSpace(user.LastName))
+                query = query.Where(u => u.LastName.Contains(user.LastName));
+
+            if (!string.IsNullOrWhiteSpace(user.Email))
+                query = query.Where(u => u.Email.Contains(user.Email));
+
+            if (user.Status > 0)
+                query = query.Where(u => u.Status == user.Status);
+
+            if (user.DateCreated.Year > 1000)
+            {
+                DateTime inicialDate = new DateTime(user.DateCreated.Year, user.DateCreated.Month, user.DateCreated.Day, 0, 0, 0);
+                DateTime finalDate = inicialDate.AddDays(1).AddMilliseconds(-1);
+                query = query.Where(u => u.DateCreated >= inicialDate && u.DateCreated <= finalDate);
+            }
+
+            query = query.OrderByDescending(u => u.Id).AsQueryable();
+
+            return query;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registros Existentes En La Base De Datos
+        public static async Task<List<User>> SearchAsync(User user)
+        {
+            var users = new List<User>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.User.AsQueryable();
+                select = QuerySelect(select, user);
+                users = await select.ToListAsync();
+            }
+            return users;
+        }
+        #endregion
+
+        #region METODO PARA INCLUIR LLAVES FORANEAS A LA BUSQUEDA
+        // Metodo Para Incluir El Rol En La Busqueda
+        public static async Task<List<User>> SearchIncludeRoleAsync(User user)
+        {
+            var users = new List<User>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.User.AsQueryable();
+                select = QuerySelect(select, user).Include(u => u.Role).AsQueryable();
+                users = await select.ToListAsync();
+            }
+            return users;
+        }
+        #endregion
     }
 }

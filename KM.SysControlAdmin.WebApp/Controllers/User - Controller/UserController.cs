@@ -66,5 +66,21 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
             }
         }
         #endregion
+
+        #region METODO PARA INDEX
+        // Metodo Para Mostrar La Vista Index
+        public async Task<IActionResult> Index(User user = null!)
+        {
+            if (user == null)
+                user = new User();
+
+            var users = await userBL.SearchIncludeRoleAsync(user);
+            var roles = await roleBL.GetAllAsync();
+
+            ViewBag.Roles = roles;
+
+            return View(users);
+        }
+        #endregion
     }
 }

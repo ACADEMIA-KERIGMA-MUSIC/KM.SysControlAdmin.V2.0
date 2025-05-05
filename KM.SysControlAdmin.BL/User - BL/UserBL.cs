@@ -22,5 +22,37 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.CreateAsync(user);
         }
         #endregion
+
+        #region METODO PARA OBTENER TODOS
+        // Metodo Para Listar y Mostrar Todos Los Resultados
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await UserDAL.GetAllAsync();
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Obtener Un Registro En Base a Su Id
+        public async Task<User> GetByIdAsync(User user)
+        {
+            return await UserDAL.GetByIdAsync(user);
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registros En La Base De Datos
+        public async Task<List<User>> SearchAsync(User user)
+        {
+            return await UserDAL.SearchAsync(user);
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR INCLUYENGO LA LLAVE FORANEA
+        // Metodo Para Buscar Registros Incluyendo Las Llaves Foraneas
+        public async Task<List<User>> SearchIncludeRoleAsync(User user)
+        {
+            return await UserDAL.SearchIncludeRoleAsync(user);
+        }
+        #endregion
     }
 }

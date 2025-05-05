@@ -1,0 +1,156 @@
+﻿@using KM.SysControlAdmin.EN.Role___EN
+@model IEnumerable<KM.SysControlAdmin.EN.User___EN.User>
+
+@{
+    ViewData["Title"] = "Usuarios";
+    List<Role> roles = ViewBag.Roles as List<Role>;
+}
+
+<link href="/css/User/DesignCreateAndEdit.css" rel="stylesheet" />
+
+<br />
+<h3>Mantenimiento De Usuarios</h3>
+<hr />
+<form asp-action="Index">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="Name">Nombre</label>
+                    <input type="text" class="form-control" name="Name" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label for="LastName">Apellido</label>
+                    <input type="text" class="form-control" name="LastName" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label for="Email">Correo Electronico</label>
+                    <input type="text" class="form-control" name="Email" placeholder="ejemplo@kerigmamusic.com" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="Status">Estatus</label>
+                    <select class="form-select" name="Status">
+                        <option value="0">Seleccionar</option>
+                        <option value="1">Activo</option>
+                        <option value="2">Inactivo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Rol</label>
+                    <select class="form-select" name="IdRole">
+                        <option selected>Seleccionar</option>
+                        @foreach (var item in roles!.Where(r => r.Id != 1)) // Excluir el rol con Id 1
+                        {
+                                <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <br />
+            <div class="form-group">
+                <input type="submit" class="btn btn-outline-success m-1" value="Buscar Usuario" /> |
+                <a asp-action="CreateUser" class="btn btn-primary">Crear Nuevo Usuario</a>
+            </div>
+        </div>
+    </div>
+</form>
+<br />
+<h2 style="text-align:center;">Tabla de Resultados</h2>
+<br />
+<table id="ResultData" class="hover" style="width:100%; text-align:center;">
+    <thead>
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.IdRole)
+            </th>
+            <th style="text-align:center;">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(u => u.Id != 1)) // Excluir usuarios con Id 1
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@(item.Status == 1 ? "Activo" : "Inactivo")</td>
+                <td>@Html.DisplayFor(modelItem => item.Role!.Name)</td>
+                <td>
+                    <a asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-warning m-1" title="Modificar Usuario">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a asp-action="DetailsUser" asp-route-id="@item.Id" class="btn btn-outline-info m-1" title="Detalles Del Usuario">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-danger m-1" title="Eliminar Usuario">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+
+@section Scripts {
+    <script>
+        // Configuracion Para La Tabla De Resultados
+        new DataTable('#ResultData', {
+            info: false,
+            order: false,
+            Response: true,
+            pagingType: 'simple_numbers',
+            language: {
+                search: 'Busqueda Rapida :',
+                searchPlaceholder: 'Ingresar',
+                lengthMenu: '_MENU_ Mostrar',
+                emptyTable: 'No Hay Datos Que Coincidan Con Su Criterio De Búsqueda.',
+                zeroRecords: 'No Existen Registros Segun La Busqueda',
+                processing: 'Procesando...',
+            }
+        });
+        // Configuracion Para La Alerta
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 8000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+        // Comprobar si hay mensajes de éxito y mostrar notificaciones del sistema
+        const successMessages = {
+            Creado: '@TempData["SuccessMessageCreate"]',
+            Modificado: '@TempData["SuccessMessageUpdate"]',
+            Eliminado: '@TempData["SuccessMessageDelete"]'
+        };
+        // Bucle, Si hay un mensaje success
+        for (const messageType in successMessages) {
+            const message = successMessages[messageType];
+            if (message) {
+                Toast.fire({
+                    icon: "success",
+                    title: `¡${messageType} Exitosamente!`,
+                    text: message
+                });
+            }
+        }
+    </script>
+}
