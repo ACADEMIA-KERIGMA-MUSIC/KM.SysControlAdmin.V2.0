@@ -54,5 +54,13 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.SearchIncludeRoleAsync(user);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Modificar Un Registro Existente En La Base De Datos
+        public async Task<int> UpdateAsync(User user)
+        {
+            return await UserDAL.UpdateAsync(user);
+        }
+        #endregion
     }
 }

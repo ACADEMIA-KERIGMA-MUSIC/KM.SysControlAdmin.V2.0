@@ -189,5 +189,46 @@ namespace KM.SysControlAdmin.DAL.User___DAL
             return users;
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Modificar Un Registro Existente De La Base De Datos
+        public static async Task<int> UpdateAsync(User user)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                // Verificar si el curso ya existe
+                bool userExists = await ExistsUser(user, dbContext);
+                if (userExists)
+                {
+                    throw new Exception("Usuario Ya Existente, Vuelve a Intentarlo Nuevamente.");
+                }
+
+                // Validar que el horario esté activo
+                if (!await StatusRole(user.IdRole, dbContext))
+                {
+                    throw new Exception("Rol No Disponible o Inactivo, Intenta Con Otro Rol.");
+                }
+
+                var userDb = await dbContext.User.FirstOrDefaultAsync(u => u.Id == user.Id);
+                if (userDb == null)
+                {
+                    throw new Exception("Usuario no encontrado.");
+                }
+                userDb.Name = user.Name;
+                userDb.LastName = user.LastName;
+                userDb.Email = user.Email;
+                userDb.Status = user.Status;
+                userDb.DateModification = user.DateModification;
+                userDb.ImageData = user.ImageData;
+                userDb.IdRole = user.IdRole;
+                userDb.RecoveryEmail = user.RecoveryEmail;
+
+                dbContext.User.Update(userDb);
+                result = await dbContext.SaveChangesAsync();
+            }
+            return result;
+        }
+        #endregion
     }
 }
