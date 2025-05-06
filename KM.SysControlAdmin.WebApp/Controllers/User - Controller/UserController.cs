@@ -450,5 +450,57 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
             }
         }
         #endregion
+
+        #region METODO VISTA PREVIA A RECUPERAR CONTRASEÑA
+        // Metodo que muestra la vista para buscar y validar si existe el usuario para recuperar la contraseña
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        // Método para mostrar la vista PasswordSentUser
+        [AllowAnonymous]
+        public IActionResult PasswordSentUser()
+        {
+            return View();
+        }
+
+        // Método POST para validar si el correo existe y manejar la respuesta
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            // Validamos si el correo existe en la base de datos
+            bool emailExists = await UserBL.EmailExistsAsync(email);
+
+            if (emailExists)
+            {
+                // Si el correo existe, generamos la contraseña temporal y la enviamos por correo
+                bool passwordSent = await UserBL.SendTemporaryPasswordAsync(email);
+
+                if (passwordSent)
+                {
+                    // Si la contraseña fue enviada correctamente, redirige a la vista PasswordSentUser
+                    return RedirectToAction("PasswordSentUser");
+                }
+                else
+                {
+                    // Si hubo un error al enviar el correo, mostramos la alerta correspondiente
+                    TempData["ToastMessage"] = "Error al enviar la contraseña. Intenta de nuevo.";
+                    TempData["ToastType"] = "error"; // o "warning" si prefieres otro tipo de notificación
+                    return View();
+                }
+            }
+            else
+            {
+                // Si el correo no existe, mostramos la alerta correspondiente en la misma vista
+                TempData["ToastMessage"] = "Usuario no encontrado";
+                TempData["ToastType"] = "error";
+                return RedirectToAction("ForgotPassword");
+            }
+        }
+        #endregion
     }
 }

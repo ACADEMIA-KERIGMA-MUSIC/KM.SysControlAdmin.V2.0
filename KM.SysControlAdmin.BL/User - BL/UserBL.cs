@@ -102,5 +102,21 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.UpdatePhotoAsync(user);
         }
         #endregion
+
+        #region METODO BL PARA VALIDAR SI EXISTE UN CORREO DE USUARIO
+        // Metodo BL Para Verificar Si Un Correo Existe
+        public static async Task<bool> EmailExistsAsync(string email)
+        {
+            return await UserDAL.EmailExistsAsync(email);
+        }
+        #endregion
+
+        #region METODO BL PARA ENVIAR CONTRASEÑA TEMPORAL
+        // Metodo BL Para Enviar Contraseña Temporal
+        public static async Task<bool> SendTemporaryPasswordAsync(string email)
+        {
+            return await UserDAL.SetTemporaryPasswordAsync(email);
+        }
+        #endregion
     }
 }

@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KM.SysControlAdmin.Core\KM.SysControlAdmin.Core.csproj" />
     <ProjectReference Include="..\KM.SysControlAdmin.EN\KM.SysControlAdmin.EN.csproj" />
   </ItemGroup>
 
