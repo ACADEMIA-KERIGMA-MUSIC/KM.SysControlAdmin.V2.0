@@ -35,5 +35,35 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Support___Controller
             return View(users);
         }
         #endregion
+
+        #region METODO PARA CAMBIAR CONTRASEÑA COMO ADMIN
+        // Acción que muestra el formulario de cambio de contraseña para un usuario específico
+        [Authorize(Roles = "Desarrollador, Administrador")]
+        public async Task<IActionResult> ChangePasswordForUser(int id)
+        {
+            var user = await userBL.GetByIdAsync(new User { Id = id });
+            return View(user);
+        }
+
+        // Acción que procesa el cambio de contraseña para un usuario específico
+        [Authorize(Roles = "Desarrollador, Administrador")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePasswordForUser(User user)
+        {
+            try
+            {
+                int result = await userBL.ChangePasswordRoleDesAsync(user);
+                TempData["SuccessMessageUpdate"] = "Credencial Modificada Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                var existingUser = await userBL.GetByIdAsync(new User { Id = user.Id });
+                return View(existingUser);
+            }
+        }
+        #endregion
     }
 }
