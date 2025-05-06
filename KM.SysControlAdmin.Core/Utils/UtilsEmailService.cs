@@ -19,11 +19,11 @@ namespace KM.SysControlAdmin.Core.Utils
             try
             {
                 var fromEmail = "soporteplataforma2025@gmail.com";
-                var fromPassword = "mljv gdjyo dxtx kpkc"; // Usa credenciales seguras en producción
+                var fromPassword = "tghv zaje nhrb aopa"; // Usa credenciales seguras en producción
 
                 var smtpClient = new SmtpClient("smtp.gmail.com") // Ej: smtp.gmail.com
                 {
-                    Port = 465, // 465 para SSL o 587 para TLS
+                    Port = 587, // 465 para SSL o 587 para TLS
                     Credentials = new NetworkCredential(fromEmail, fromPassword),
                     EnableSsl = true
                 };
