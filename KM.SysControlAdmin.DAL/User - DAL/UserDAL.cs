@@ -261,5 +261,29 @@ namespace KM.SysControlAdmin.DAL.User___DAL
             return userDb!;
         }
         #endregion
+
+        #region METODO PARA CAMBIAR LA CONTRASEÑA
+        // Metodo Para Cambiar o Actualizar La Contraseña Del Usuario
+        public static async Task<int> ChangePasswordAsync(User user, string oldPassword)
+        {
+            int result = 0;
+            var userOldPass = new User { Password = oldPassword };
+            EncryptMD5(userOldPass);
+            using (var dbContext = new ContextDB())
+            {
+                var userDb = await dbContext.User.FirstOrDefaultAsync(u => u.Id == user.Id);
+                if (userOldPass.Password == userDb!.Password)
+                {
+                    EncryptMD5(user);
+                    userDb.Password = user.Password;
+                    dbContext.User.Update(userDb);
+                    result = await dbContext.SaveChangesAsync();
+                }
+                else
+                    throw new Exception("Vuelve a Intentarlo Nuevamente");
+            }
+            return result;
+        }
+        #endregion
     }
 }

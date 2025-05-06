@@ -311,5 +311,37 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
             return RedirectToAction("Login", "User");
         }
         #endregion
+
+        #region METODO PARA CAMBIAR LA CONTRASEÑA
+        // Accion Que Muestra El Formulario
+        [Authorize(Roles = "Desarrollador, Administrador, Instructor, Alumno/a, Secretario/a, Invitado")]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var users = await userBL.SearchAsync(new User { Email = User.Identity!.Name! });
+            var actualUser = users.FirstOrDefault();
+            return View(actualUser);
+        }
+
+        // Accion Que Recibe La Contraseña Actualizada y La Envia a La Base De Datos
+        [Authorize(Roles = "Desarrollador, Administrador, Instructor, Alumno/a, Secretario/a, Invitado")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(User user, string oldPassword)
+        {
+            try
+            {
+                int result = await userBL.ChangePasswordAsync(user, oldPassword);
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login", "User");
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                var users = await userBL.SearchAsync(new User { Email = User.Identity!.Name! });
+                var actualUser = users.FirstOrDefault();
+                return View(actualUser);
+            }
+        }
+        #endregion
     }
 }

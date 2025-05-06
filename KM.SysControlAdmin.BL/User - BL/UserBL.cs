@@ -78,5 +78,13 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.LoginAsync(user);
         }
         #endregion
+
+        #region METODO PARA CAMBIAR CONTRASEÑA
+        // Metodo Para Cambiar La Contraseña Del Usuario
+        public async Task<int> ChangePasswordAsync(User user, string oldPassword)
+        {
+            return await UserDAL.ChangePasswordAsync(user, oldPassword);
+        }
+        #endregion
     }
 }
