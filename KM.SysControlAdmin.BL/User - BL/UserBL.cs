@@ -62,5 +62,13 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.UpdateAsync(user);
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public async Task<int> DeleteAsync(User user)
+        {
+            return await UserDAL.DeleteAsync(user);
+        }
+        #endregion
     }
 }

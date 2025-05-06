@@ -181,5 +181,71 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
             }
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Acción que muestra el formulario de eliminación
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            try
+            {
+                // Obtener el usuario por ID
+                var user = await userBL.GetByIdAsync(new User { Id = id });
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                if (user.ImageData != null && user.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(user.ImageData);
+                }
+                user.Role = await roleBL.GetByIdAsync(new Role { Id = user.IdRole });
+                ViewBag.Roles = await roleBL.GetAllAsync();
+
+                return View(user);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto en caso de error
+            }
+        }
+
+        // Acción que recibe los datos del formulario para ser eliminados en la base de datos
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(int id, User user)
+        {
+            try
+            {
+                // Obtener el usuario por ID para asegurarse de que existe antes de eliminar
+                var userDb = await userBL.GetByIdAsync(new User { Id = id });
+                if (userDb == null)
+                {
+                    return NotFound();
+                }
+                int result = await userBL.DeleteAsync(userDb);
+                TempData["SuccessMessageDelete"] = "Usuario Eliminado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                // Volver a cargar el usuario en caso de error
+                var userDb = await userBL.GetByIdAsync(new User { Id = id });
+                if (userDb == null)
+                {
+                    userDb = new User();
+                }
+                // Obtener el rol del usuario en caso de que exista
+                if (userDb.Id > 0)
+                {
+                    userDb.Role = await roleBL.GetByIdAsync(new Role { Id = userDb.IdRole });
+                }
+                ViewBag.Roles = await roleBL.GetAllAsync();
+
+                return View(userDb); // Devolver la vista con los datos del usuario para que pueda corregir o revisar
+            }
+        }
+        #endregion
     }
 }
