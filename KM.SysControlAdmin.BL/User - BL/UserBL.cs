@@ -94,5 +94,13 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.ChangePasswordRoleDesAsync(user);
         }
         #endregion
+
+        #region METODO PARA ACTUALIZAR UNICAMENTE FOTOGRAFIA DEL USUARIO
+        // Metodo Para Modificar Unicamente La Fotografia Del Usuario Logueado
+        public async Task<int> UpdatePhotoAsync(User user)
+        {
+            return await UserDAL.UpdatePhotoAsync(user);
+        }
+        #endregion
     }
 }

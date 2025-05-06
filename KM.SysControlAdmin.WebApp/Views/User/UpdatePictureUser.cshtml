@@ -1,0 +1,119 @@
+﻿@model KM.SysControlAdmin.EN.User___EN.User
+
+@{
+    ViewData["Title"] = "Actualizar Foto de Perfil";
+}
+
+<link href="/css/User/DesignInformation.css" rel="stylesheet" />
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <!-- Imagen de usuario -->
+            <img src="@(ViewBag.ImageUrl ?? "/img/default-profile.png")"
+                 alt="Foto de Usuario"
+                 class="rounded-circle shadow mb-3 user-photo"
+                 style="width: 150px; height: 150px; object-fit: cover;">
+
+            <!-- Información básica -->
+            <h3 class="mt-2">@Model.Name @Model.LastName</h3>
+            <p class="text-muted mb-1">@Model.Email</p>
+            <p><span class="badge badge-secondary">@Model.Role?.Name</span></p>
+
+            <!-- Formulario para actualizar imagen -->
+            <form id="photoForm" asp-action="UpdatePictureUser" method="post" enctype="multipart/form-data" class="mt-1">
+                <div class="custom-file">
+                    <input type="file" name="imagen" accept="image/*" class="form-control" id="imagen" required>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4 gap-2">
+                    <a href="/Home/Index" class="btn btn-secondary">
+                        <i class="ti-home"></i> Regresar al Inicio
+                    </a>
+                    <button type="submit" class="btn btn-success mr-2" id="btnActualizar">
+                        <i class="ti-export"></i> Actualizar Fotografía
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Preview de imagen y cambio de texto
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputImagen = document.querySelector('#imagen');
+            const imagenPreview = document.querySelector('.user-photo');
+
+            inputImagen.addEventListener("change", function () {
+                const file = inputImagen.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagenPreview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Confirmación con SweetAlert2
+            const form = document.getElementById('photoForm');
+            const btnActualizar = document.getElementById('btnActualizar');
+
+            btnActualizar.addEventListener("click", function (e) {
+                e.preventDefault(); // Prevenir envío inmediato
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¿Deseas actualizar tu fotografía de perfil?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, actualizar',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+
+            // Mostrar notificaciones tipo toast si hay mensajes de TempData
+        @if (TempData["SuccessMessageUpdate"] != null)
+        {
+            <text>
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: '@TempData["SuccessMessageUpdate"]',
+                            showConfirmButton: false,
+                            timer: 8000,
+                            timerProgressBar: true
+                        });
+            </text>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'error',
+                            title: '@TempData["ErrorMessage"]',
+                            showConfirmButton: false,
+                            timer: 8000,
+                            timerProgressBar: true
+                        });
+            </text>
+        }
+        });
+    </script>
+}

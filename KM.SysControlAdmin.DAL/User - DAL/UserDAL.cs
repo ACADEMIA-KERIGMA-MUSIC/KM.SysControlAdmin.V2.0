@@ -309,5 +309,27 @@ namespace KM.SysControlAdmin.DAL.User___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA ACTUALIZAR UNICAMENTE FOTOGRAFIA DEL USUARIO
+        // Metodo Para Modificar Unicamente La Fotografia Del Usuario Logueado
+        public static async Task<int> UpdatePhotoAsync(User user)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var userDb = await dbContext.User.FirstOrDefaultAsync(u => u.Id == user.Id);
+                if (userDb == null)
+                {
+                    throw new Exception("Usuario no encontrado.");
+                }
+
+                userDb.ImageData = user.ImageData;
+
+                dbContext.User.Update(userDb);
+                result = await dbContext.SaveChangesAsync();
+            }
+            return result;
+        }
+        #endregion
     }
 }

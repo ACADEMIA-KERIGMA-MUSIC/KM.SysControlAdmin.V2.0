@@ -367,5 +367,88 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
             }
         }
         #endregion
+
+        #region METODO PARA ACTUALIZAR UNICAMENTE FOTOGRAFIA DEL USUARIO
+        // Muestra el perfil del usuario logueado con su imagen (si tiene)
+        [Authorize(Roles = "Desarrollador, Administrador, Instructor, Alumno/a, Secretario/a, Invitado")]
+        public async Task<IActionResult> UpdatePictureUser()
+        {
+            try
+            {
+                var users = await userBL.SearchIncludeRoleAsync(new User { Email = User.Identity!.Name! });
+                var actualUser = users.FirstOrDefault();
+
+                // Validar existencia
+                if (actualUser == null)
+                    throw new Exception("No se encontró información del usuario logueado.");
+
+                // Convertir el array de bytes en imagen para mostrar en la vista
+                if (actualUser.ImageData != null && actualUser.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(actualUser.ImageData)}";
+                }
+
+                return View(actualUser);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // Método para actualizar únicamente la fotografía del usuario logueado
+        [Authorize(Roles = "Desarrollador, Administrador, Instructor, Alumno/a, Secretario/a, Invitado")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePictureUser(IFormFile imagen)
+        {
+            try
+            {
+                // Verificar si el archivo fue seleccionado
+                if (imagen == null || imagen.Length == 0)
+                {
+                    throw new Exception("Debe seleccionar una imagen válida.");
+                }
+
+                // Obtener al usuario logueado desde su email
+                var users = await userBL.SearchIncludeRoleAsync(new User { Email = User.Identity!.Name! });
+                var actualUser = users.FirstOrDefault();
+
+                if (actualUser == null)
+                    throw new Exception("No se encontró información del usuario logueado.");
+
+                // Verificar el tamaño del archivo (1.5MB = 1.5 * 1024 * 1024 bytes = 1,572,864 bytes)
+                const int maxFileSize = 1572864; // 1.5 MB
+                if (imagen.Length > maxFileSize)
+                {
+                    throw new Exception("La imagen no debe pesar mas de los 1.5MB.");
+
+                }
+
+                byte[] imagenData;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await imagen.CopyToAsync(memoryStream);
+                    imagenData = memoryStream.ToArray();
+                }
+
+                actualUser.ImageData = imagenData;
+
+                int result = await userBL.UpdatePhotoAsync(actualUser);
+
+                if (result > 0)
+                    TempData["SuccessMessageUpdate"] = "Fotografía actualizada exitosamente.";
+
+                return RedirectToAction("UpdatePictureUser");
+            }
+            catch (Exception e)
+            {
+                // En caso de error, pasar el mensaje al TempData
+                TempData["ErrorMessage"] = e.Message;
+                return RedirectToAction("UpdatePictureUser");
+            }
+        }
+        #endregion
     }
 }
