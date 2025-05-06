@@ -152,5 +152,34 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
             }
         }
         #endregion
+
+        #region METODO PARA DETALLES
+        // Acción que muestra los detalles de un registro
+        public async Task<IActionResult> DetailsUser(int id)
+        {
+            try
+            {
+                // Obtener el usuario por ID
+                var user = await userBL.GetByIdAsync(new User { Id = id });
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                // Verificar si el usuario tiene una imagen y convertirla para mostrar en la vista
+                if (user.ImageData != null && user.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(user.ImageData);
+                }
+                user.Role = await roleBL.GetByIdAsync(new Role { Id = user.IdRole });
+
+                return View(user); // Retornar los detalles del usuario a la vista
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto en caso de error
+            }
+        }
+        #endregion
     }
 }
