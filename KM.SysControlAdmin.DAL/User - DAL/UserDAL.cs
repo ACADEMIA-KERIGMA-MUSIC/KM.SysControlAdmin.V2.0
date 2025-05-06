@@ -285,5 +285,29 @@ namespace KM.SysControlAdmin.DAL.User___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA CAMBIAR LA CONTRASEÑA DESDE DESARROLLADOR Y ADMINISTRADOR
+        // Metodo Para Cambiar o Actualizar La Contraseña Del Usuario Sin Validar La Anterior
+        public static async Task<int> ChangePasswordRoleDesAsync(User user)
+        {
+            int result = 0;
+            EncryptMD5(user); // Encriptamos la nueva contraseña
+            using (var dbContext = new ContextDB())
+            {
+                var userDb = await dbContext.User.FirstOrDefaultAsync(u => u.Id == user.Id);
+                if (userDb != null)
+                {
+                    userDb.Password = user.Password;
+                    dbContext.User.Update(userDb);
+                    result = await dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Usuario no encontrado");
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }
