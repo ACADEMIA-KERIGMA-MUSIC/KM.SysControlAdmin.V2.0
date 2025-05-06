@@ -82,7 +82,7 @@
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">
-                            Copyright &copy; Desarrollado Por Hector Garcia <span id="currentYear"></span>
+                            &copy;Copyright <span id="currentYear"></span>. Desarrollado Por Hector Garcia
                         </div>
                     </div>
                 </div>
@@ -98,7 +98,8 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Sí, Cerrar Sesión',
-                    cancelButtonText: 'Cancelar'
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = '@Url.Action("Logout", "User")';
