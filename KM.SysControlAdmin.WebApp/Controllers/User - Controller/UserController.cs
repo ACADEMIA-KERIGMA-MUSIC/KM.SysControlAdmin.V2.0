@@ -5,8 +5,11 @@ using KM.SysControlAdmin.BL.User___BL;
 using KM.SysControlAdmin.Core.Utils;
 using KM.SysControlAdmin.EN.Role___EN;
 using KM.SysControlAdmin.EN.User___EN;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 #endregion
@@ -245,6 +248,58 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
 
                 return View(userDb); // Devolver la vista con los datos del usuario para que pueda corregir o revisar
             }
+        }
+        #endregion
+
+        #region METODO DE INICIO DE SESION Y CERRAR SESION (LOGIN, LOGOUT)
+        // Accion Que Muestra El Formulario
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string returnUrl = null!)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            ViewBag.Url = returnUrl;
+            ViewBag.Error = "";
+            return View();
+        }
+
+        // Accion Que Ejecuta La Autenticacion Del Usuario
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(User user, string returnUrl = null!)
+        {
+            try
+            {
+                var userDb = await userBL.LoginAsync(user);
+                if (userDb != null && userDb.Id > 0 && userDb.Email == user.Email)
+                {
+                    userDb.Role = await roleBL.GetByIdAsync(new Role { Id = userDb.IdRole });
+                    var claims = new[] { new Claim(ClaimTypes.Name, userDb.Email), new Claim(ClaimTypes.Role, userDb.Role.Name) };
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+                }
+                else
+                    throw new Exception("Credenciales Incorrectas, Vuelve a Intentarlo");
+
+                if (!string.IsNullOrWhiteSpace(returnUrl))
+                    return Redirect(returnUrl);
+                else
+                    return RedirectToAction("Index", "Home");
+            }
+            catch (Exception e)
+            {
+                ViewBag.Url = returnUrl;
+                ViewBag.Error = e.Message;
+                return View(new User { Email = user.Email });
+            }
+        }
+
+        // Accion Que Permite Cerrar La Sesion
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout(string returnUrl = null!)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "User");
         }
         #endregion
     }

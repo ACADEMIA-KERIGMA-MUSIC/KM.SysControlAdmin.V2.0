@@ -70,5 +70,13 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.DeleteAsync(user);
         }
         #endregion
+
+        #region METODO PARA INICIAR SESION (LOGIARSE)
+        // Metodo Para Autenticar El Usuario
+        public async Task<User> LoginAsync(User user)
+        {
+            return await UserDAL.LoginAsync(user);
+        }
+        #endregion
     }
 }
