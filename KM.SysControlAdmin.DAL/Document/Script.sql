@@ -49,3 +49,24 @@ CREATE TABLE Schedule(
 	DateModification DATETIME NOT NULL
 );
 GO
+CREATE TABLE Trainer(
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    Code VARCHAR(20) NOT NULL,
+    [Name] VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Dui VARCHAR(10) NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    Age VARCHAR(3) NOT NULL,
+    Gender VARCHAR(20) NOT NULL,
+    CivilStatus VARCHAR(20) NOT NULL,
+    Phone VARCHAR(9) NOT NULL,
+    [Address] VARCHAR(100) NOT NULL,
+	[Status] TINYINT NOT NULL,
+    CommentsOrObservations VARCHAR(300) NULL,
+    DateCreated DATETIME NOT NULL,
+    DateModification DATETIME NOT NULL,
+    ImageData VARBINARY(MAX) NOT NULL,
+	EntryDate DATETIME NOT NULL,
+	PersonalEmail VARCHAR(50) NOT NULL
+);
+GO
