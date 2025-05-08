@@ -133,5 +133,23 @@ namespace KM.SysControlAdmin.DAL.Schedule___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public static async Task<int> DeleteAsync(Schedule schedule)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var scheduleDb = await dbContext.Schedule.FirstOrDefaultAsync(r => r.Id == schedule.Id);
+                if (scheduleDb != null)
+                {
+                    dbContext.Schedule.Remove(scheduleDb);
+                    result = await dbContext.SaveChangesAsync();
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }

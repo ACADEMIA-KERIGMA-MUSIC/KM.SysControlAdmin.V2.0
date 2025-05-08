@@ -1,0 +1,81 @@
+﻿@model KM.SysControlAdmin.EN.Schedule___EN.Schedule
+
+@{
+    ViewData["Title"] = "Eliminar Horario";
+}
+
+<br />
+<h1>Formulario - Eliminar Horario</h1>
+<br />
+<p class="alert alert-danger">
+    <strong>Recuerda:</strong> No podrás revertir los cambios. <br />
+    <strong>Datos a tomar en cuenta:</strong> El Formato de hora a usar para los horarios es de "24 Horas."
+</p>
+<span>@ViewBag.Error</span>
+<hr />
+
+<script>
+    async function ShowDeletePrompt() {
+        const statusText = @Model.Status == 1 ? "Activo" : @Model.Status == 2 ? "Inactivo" : "Desconocido";
+
+        const result = await Swal.fire({
+            title: 'Información Del Horario',
+            html: `
+                    <div style="text-align: center;">
+                        <p><strong>Hora de Inicio:</strong> @Model.StartTimeFormatted @(Model.StartTime.Hours >= 12 ? "PM" : "AM")</p>
+                        <p><strong>Hora de Fin:</strong> @Model.EndTimeFormatted @(Model.EndTime.Hours >= 12 ? "PM" : "AM")</p>
+                        <p><strong>Estado:</strong> <span>${statusText}</span></p>
+                    </div>
+                `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, Eliminar Horario',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            ConfirmFinalDeletion();
+        } else {
+            window.location.href = '@Url.Action("Index", "Schedule")';
+        }
+    }
+
+    async function ConfirmFinalDeletion() {
+        const confirmation = await Swal.fire({
+            title: '¿Estás seguro de Eliminar este Horario?',
+            text: 'Recuerda: No podrás revertir los cambios.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, Eliminar Horario',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        });
+
+        if (confirmation.isConfirmed) {
+            document.getElementById('Form').submit();
+        } else {
+            window.location.href = '@Url.Action("Index", "Schedule")';
+        }
+    }
+
+    window.onload = ShowDeletePrompt;
+
+    function showErrorAlert(message) {
+        Swal.fire({
+            title: 'Error',
+            text: message,
+            icon: 'error'
+        });
+    }
+
+    // Mostrar alerta de ViewBag.Error si es necesario
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        @:showErrorAlert('@ViewBag.Error');
+    }
+</script>
+
+<form asp-action="DeleteSchedule" id="Form">
+    <input type="hidden" asp-for="Id" />
+</form>

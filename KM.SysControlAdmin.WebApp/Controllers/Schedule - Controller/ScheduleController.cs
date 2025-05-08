@@ -93,5 +93,35 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Schedule___Controller
             }
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Mostrar La Vista De Eliminar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> DeleteSchedule(int id)
+        {
+            var schedule = await scheduleBL.GetByIdAsync(new Schedule { Id = id });
+            ViewBag.Error = "";
+            return View(schedule);
+        }
+
+        // Metodo Que Recibe y Envia a La Base De Datos
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteSchedule(int id, Schedule schedule)
+        {
+            try
+            {
+                int result = await scheduleBL.DeleteAsync(schedule);
+                TempData["SuccessMessageDelete"] = "Horario Eliminado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(schedule);
+            }
+        }
+        #endregion
     }
 }

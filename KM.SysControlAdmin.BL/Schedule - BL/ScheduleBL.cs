@@ -54,5 +54,13 @@ namespace KM.SysControlAdmin.BL.Schedule___BL
             return await ScheduleDAL.UpdateAsync(schedule);
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public async Task<int> DeleteAsync(Schedule schedule)
+        {
+            return await ScheduleDAL.DeleteAsync(schedule);
+        }
+        #endregion
     }
 }
