@@ -45,5 +45,75 @@ namespace KM.SysControlAdmin.DAL.Trainer___DAL
             return result;  // Si se realizo con exito devuelve 1 sino devuelve 0
         }
         #endregion
+
+        #region METODO PARA MOSTRAR
+        // Metodo Para Mostrar La Lista De Registros
+        public static async Task<List<Trainer>> GetAllAsync()
+        {
+            var trainer = new List<Trainer>();
+            using (var dbContext = new ContextDB())
+            {
+                trainer = await dbContext.Trainer.ToListAsync();
+            }
+            return trainer;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Mostrar Un Registro En Base A Su Id
+        public static async Task<Trainer> GetByIdAsync(Trainer trainer)
+        {
+            var trainerDB = new Trainer();
+            // Un bloque de conexion que mientras se permanezca en el bloque la base de datos permanecera abierta y al terminar se destruira
+            using (var dbContext = new ContextDB())
+            {
+                trainerDB = await dbContext.Trainer.FirstOrDefaultAsync(m => m.Id == trainer.Id);
+            }
+            return trainerDB!; // Retornamos el Registro Encontrado
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR REGISTROS MEDIANTE EL USO DE FILTROS
+        // Metodo Para Buscar Por Filtros
+        // IQueryable es una interfaz que toma un coleccion a la cual se le pueden implementar multiples consultas (Filtros)
+        internal static IQueryable<Trainer> QuerySelect(IQueryable<Trainer> query, Trainer trainer)
+        {
+            // Por ID
+            if (trainer.Id > 0)
+                query = query.Where(m => m.Id == trainer.Id);
+
+            if (!string.IsNullOrWhiteSpace(trainer.Name))
+                query = query.Where(m => m.Name.Contains(trainer.Name));
+
+            if (!string.IsNullOrWhiteSpace(trainer.LastName))
+                query = query.Where(m => m.LastName.Contains(trainer.LastName));
+
+            if (!string.IsNullOrWhiteSpace(trainer.Dui))
+                query = query.Where(m => m.Dui.Contains(trainer.Dui));
+
+            if (!string.IsNullOrWhiteSpace(trainer.Code))
+                query = query.Where(m => m.Code.Contains(trainer.Code));
+
+            // Ordenamos de Manera Desendente
+            query = query.OrderByDescending(c => c.Id).AsQueryable();
+
+            return query;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo para Buscar Registros Existentes
+        public static async Task<List<Trainer>> SearchAsync(Trainer trainer)
+        {
+            var trainers = new List<Trainer>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.Trainer.AsQueryable();
+                select = QuerySelect(select, trainer);
+                trainers = await select.ToListAsync();
+            }
+            return trainers;
+        }
+        #endregion
     }
 }

@@ -21,5 +21,29 @@ namespace KM.SysControlAdmin.BL.Trainer___BL
             return await TrainerDAL.CreateAsync(trainer);
         }
         #endregion
+
+        #region METODO PARA MOSTRAR
+        // Metodo Para Mostrar Una Lista De Registros
+        public async Task<List<Trainer>> GetAllAsync()
+        {
+            return await TrainerDAL.GetAllAsync();
+        }
+        #endregion
+
+        #region METODO PARA MOSTRAR POR ID
+        // Metodo Para Mostrar Un Registro Especifico Bajo Un Id
+        public async Task<Trainer> GetByIdAsync(Trainer trainer)
+        {
+            return await TrainerDAL.GetByIdAsync(trainer);
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registros Existentes
+        public async Task<List<Trainer>> SearchAsync(Trainer trainer)
+        {
+            return await TrainerDAL.SearchAsync(trainer);
+        }
+        #endregion
     }
 }

@@ -87,5 +87,18 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
             }
         }
         #endregion
+
+        #region METODO PARA MOSTRAR INDEX
+        // Accion Para Mostrar La Vista Index
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> Index(Trainer trainer = null!)
+        {
+            if (trainer == null)
+                trainer = new Trainer();
+
+            var trainers = await trainerBL.SearchAsync(trainer);
+            return View(trainers);
+        }
+        #endregion
     }
 }

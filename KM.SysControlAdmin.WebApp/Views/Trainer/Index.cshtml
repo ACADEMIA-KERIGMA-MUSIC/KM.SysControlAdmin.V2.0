@@ -1,0 +1,192 @@
+﻿@model IEnumerable<KM.SysControlAdmin.EN.Trainer___EN.Trainer>
+
+@{
+    ViewData["Title"] = "Instructores";
+}
+
+<link href="/css/Trainer/DesignCreateAndEdit.css" rel="stylesheet" />
+
+<br />
+<h3>Mantenimiento De Instructores</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Index">
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="Name">Nombre</label>
+                    <input type="text" class="form-control" name="Name" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label for="Name">Apellido</label>
+                    <input type="text" class="form-control" name="LastName" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label for="Name">Dui</label>
+                    <input type="text" class="form-control" name="Dui" placeholder="00000000-0" id="inputDui" />
+                </div>
+                <div class="form-group">
+                    <label for="Name">Codigo</label>
+                    <input type="text" class="form-control" name="Code" placeholder="Ejemplo: hlgl525" />
+                </div>
+            </div>
+            <br />
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-outline-success m-1" value="Buscar Instructor" /> |
+                    <a asp-action="CreateTrainer" class="btn btn-primary">Crear Nuevo Instructor</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<h2 style="text-align:center;">Tabla de Resultados</h2>
+<br />
+<table id="ResultData" class="hover" style="width:100%; text-align:center;">
+    <thead>
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Dui)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.CivilStatus)
+            </th>
+            <th style="text-align:center;">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.Dui)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.CivilStatus)
+                </td>
+                <td>
+                    <a asp-action="EditTrainer" asp-route-id="@item.Id" class="btn btn-warning m-1"title="Modificar Instructor">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a asp-action="DetailsTrainer" asp-route-id="@item.Id" class="btn btn-outline-info m-1" title="Detalles Del Instructor">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a asp-action="DeleteTrainer" asp-route-id="@item.Id" class="btn btn-danger m-1" title="Eliminar Instructor">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                    <a asp-action="GeneratePDFfileTrainer" asp-route-id="@item.Id" class="btn btn-primary" title="Generar Pdf">
+                        <i class="fas fa-file-pdf"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+
+@section Scripts {
+    <script>
+        // Configuracion para la tabla principal
+        new DataTable('#ResultData', {
+            info: false,
+            order: false,
+            Response: true,
+            pagingType: 'simple_numbers',
+            language: {
+                search: 'Busqueda Rapida :',
+                searchPlaceholder: 'Ingresar',
+                lengthMenu: '_MENU_ Mostrar',
+                emptyTable: 'No Hay Datos Que Coincidan Con Su Criterio De Búsqueda.',
+                zeroRecords: 'No Existen Registros Segun La Busqueda',
+                processing: 'Procesando...',
+            }
+        });
+        // Función para formatear el Dui
+        function formatDui(inputValue) {
+            inputValue = inputValue.replace(/\D/g, ''); // Remover todos los caracteres que no sean dígitos
+            var formattedValue = '';
+            for (var i = 0; i < inputValue.length; i++) {
+                if (i == 8) {
+                    formattedValue += '-' + inputValue.charAt(i);
+                } else {
+                    formattedValue += inputValue.charAt(i);
+                }
+            }
+            formattedValue = formattedValue.substring(0, 10); // Limitar la longitud total a 10 caracteres, incluyendo el guion
+            return formattedValue;
+        }
+
+        // Función para actualizar el código de barras (añadir implementación según sea necesario)
+        function actualizarCodigoDeBarras() {
+            // Implementar la lógica para actualizar el código de barras basado en el Dui
+        }
+
+        // Configuración de las notificaciones
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 8000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+
+        // Comprobar si hay mensajes de éxito y mostrar notificaciones del sistema
+        const successMessages = {
+            Creado: '@TempData["SuccessMessageCreate"]',
+            Modificado: '@TempData["SuccessMessageUpdate"]',
+            Eliminado: '@TempData["SuccessMessageDelete"]'
+        };
+
+        for (const messageType in successMessages) {
+            const message = successMessages[messageType];
+            if (message) {
+                Toast.fire({
+                    icon: "success",
+                    title: `¡${messageType} Exitosamente!`,
+                    text: message
+                });
+            }
+        }
+
+        // Eventos automatizados
+        document.addEventListener("DOMContentLoaded", function () {
+            // Asignar eventos al inputDui
+            document.getElementById('inputDui').addEventListener('input', function (event) {
+                var inputValue = event.target.value;
+                var formattedValue = formatDui(inputValue);
+                event.target.value = formattedValue;
+                actualizarCodigoDeBarras();
+            });
+        });
+    </script>
+
+}
