@@ -1,0 +1,109 @@
+﻿@model KM.SysControlAdmin.EN.Schedule___EN.Schedule
+
+@{
+    ViewData["Title"] = "Modificar Horario";
+}
+
+<br />
+<h1>Formulario - Modificar Horario</h1>
+<div class="alert alert-warning"><strong>Datos a tomar en cuenta:</strong> El Formato de hora a usar para los horarios es de "24 Horas."</div>
+<span>@ViewBag.Error</span>
+<hr />
+
+<script>
+    async function ShowEditPrompt() {
+        const statusOptions = `
+            <label for="status"><strong>Estado:</strong></label>
+            <select id="status" class="swal2-select">
+                <option value="0">Seleccionar</option>
+                <option value="1" ${@Model.Status == 1 ? "selected" : ""}>Activo</option>
+                <option value="2" ${@Model.Status == 2 ? "selected" : ""}>Inactivo</option>
+            </select>
+            <br />
+        `;
+
+        const { value: formValues } = await Swal.fire({
+            title: 'Horario a Modificar',
+            html: `
+                <label for="startTime"><strong>Hora de Inicio:</strong></label>
+                <input type="time" id="startTime" class="swal2-input" value="@Model.StartTime">
+                <br />
+                <label for="endTime"><strong>Hora de Fin:</strong></label>
+                <input type="time" id="endTime" class="swal2-input" value="@Model.EndTime">
+                <br />
+                ${statusOptions}
+                <br />
+            `,
+            focusConfirm: true,
+            showCancelButton: true,
+            confirmButtonText: 'Modificar Horario',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true,
+            preConfirm: () => {
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+                const status = document.getElementById('status').value;
+
+                if (!startTime || startTime === "00:00" || !endTime || endTime === "00:00") {
+                    Swal.showValidationMessage('Por favor, ingrese una hora válida para ambos campos.');
+                    return false;
+                }
+
+                if (status == "0") {
+                    Swal.showValidationMessage('Por favor, seleccione un estado válido.');
+                    return false;
+                }
+
+                return { startTime, endTime, status };
+            }
+        });
+
+        if (!formValues) {
+            window.location.href = '@Url.Action("Index", "Schedule")'; // Si el usuario cancela, redirige a la lista
+            return;
+        }
+
+        // Confirmación antes de enviar
+        Swal.fire({
+            title: '¿Guardar Cambios?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, Modificar Horario',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('StartTime').value = formValues.startTime;
+                document.getElementById('EndTime').value = formValues.endTime;
+                document.getElementById('Status').value = formValues.status;
+                document.getElementById('Form').submit();
+            } else {
+                window.location.href = '@Url.Action("Index", "Schedule")';
+            }
+        });
+    }
+
+    window.onload = ShowEditPrompt;
+
+    function showErrorAlert(message) {
+        Swal.fire({
+            title: 'Error',
+            text: message,
+            icon: 'error'
+        });
+    }
+
+    // Mostrar alerta de ViewBag.Error si es necesario
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        @:showErrorAlert('@ViewBag.Error');
+    }
+</script>
+
+<form asp-action="EditSchedule" id="Form">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" id="StartTime" name="StartTime" />
+    <input type="hidden" id="EndTime" name="EndTime" />
+    <input type="hidden" id="Status" name="Status" />
+</form>

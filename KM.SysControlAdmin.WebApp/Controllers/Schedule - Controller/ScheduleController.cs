@@ -62,5 +62,36 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Schedule___Controller
             return View(schedules);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        // Metodo Para Mostrar La Vista De Modificar
+        public async Task<IActionResult> EditSchedule(int id)
+        {
+            var schedule = await scheduleBL.GetByIdAsync(new Schedule { Id = id });
+            ViewBag.Error = "";
+            return View(schedule);
+        }
+
+        // Metodo Que Recibe y Envia a La Base De Datos
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSchedule(Schedule schedule)
+        {
+            try
+            {
+                schedule.DateModification = DateTime.Now.GetFechaZonaHoraria();
+                int result = await scheduleBL.UpdateAsync(schedule);
+                TempData["SuccessMessageUpdate"] = "Horario Modificado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(schedule);
+            }
+        }
+        #endregion
     }
 }

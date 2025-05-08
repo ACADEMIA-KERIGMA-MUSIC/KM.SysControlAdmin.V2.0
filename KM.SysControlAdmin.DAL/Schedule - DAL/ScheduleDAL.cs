@@ -105,5 +105,33 @@ namespace KM.SysControlAdmin.DAL.Schedule___DAL
             return schedules;
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Modificar Un Registro Existente En La Base De Datos
+        public static async Task<int> UpdateAsync(Schedule schedule)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var scheduleDb = await dbContext.Schedule.FirstOrDefaultAsync(r => r.Id == schedule.Id);
+                if (scheduleDb != null)
+                {
+                    bool scheduleExists = await ExistSchedule(schedule, dbContext);
+                    if (scheduleExists == false)
+                    {
+                        scheduleDb.StartTime = schedule.StartTime;
+                        scheduleDb.EndTime = schedule.EndTime;
+                        scheduleDb.Status = schedule.Status;
+                        scheduleDb.DateModification = schedule.DateModification;
+                        dbContext.Schedule.Update(scheduleDb);
+                        result = await dbContext.SaveChangesAsync();
+                    }
+                    else
+                        throw new Exception("Horario Ya Existente, Vuelve a Intentarlo");
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }

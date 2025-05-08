@@ -46,5 +46,13 @@ namespace KM.SysControlAdmin.BL.Schedule___BL
             return await ScheduleDAL.SearchAsync(schedule);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Modificar Un Registro Existente En La Base De Datos
+        public async Task<int> UpdateAsync(Schedule schedule)
+        {
+            return await ScheduleDAL.UpdateAsync(schedule);
+        }
+        #endregion
     }
 }
