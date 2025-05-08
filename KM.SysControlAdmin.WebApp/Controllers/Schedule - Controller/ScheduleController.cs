@@ -49,5 +49,18 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Schedule___Controller
             }
         }
         #endregion
+
+        #region METODO PARA INDEX
+        // Metodo Para Mostrar La Vista Index
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> Index(Schedule schedule = null!)
+        {
+            if (schedule == null)
+                schedule = new Schedule();
+
+            var schedules = await scheduleBL.SearchAsync(schedule);
+            return View(schedules);
+        }
+        #endregion
     }
 }

@@ -1,0 +1,154 @@
+﻿@model IEnumerable<KM.SysControlAdmin.EN.Schedule___EN.Schedule>
+
+@{
+    ViewData["Title"] = "Horarios";
+}
+
+<br />
+<h3>Mantenimiento De Horarios</h3>
+<div class="alert alert-warning"><strong>Datos a tomar en cuenta:</strong> El Formato de hora a usar para los horarios es de "24 Horas."</div>
+<hr />
+<div>
+    <form asp-action="Index">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="StartTime">Hora de Inicio</label>
+                    <input type="time" class="form-control" name="StartTime" placeholder="Ingresar" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="EndTime">Hora de Finalización</label>
+                    <input type="time" class="form-control" name="EndTime" placeholder="Ingresar" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-outline-success m-1" value="Buscar Horario" /> |
+                    <a asp-action="CreateSchedule" class="btn btn-primary">Crear Nuevo Horario</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+<h2 style="text-align:center;">Tabla de Resultados</h2>
+<br />
+<table id="ResultData" class="hover" style="width:100%; text-align:center;">
+    <thead>
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.DateModification)
+            </th>
+            <th style="text-align:center;">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTimeFormatted)
+                    @(item.StartTime.Hours >= 12 ? "PM" : "AM")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTimeFormatted)
+                    @(item.EndTime.Hours >= 12 ? "PM" : "AM")
+                </td>
+                @if (item.Status == 1)
+                {
+                    <td>Activo</td>
+                }
+                else if (item.Status == 2)
+                {
+                    <td>Inactivo</td>
+                }
+                else
+                {
+                    <td></td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreatedFormatted)
+                    @(item.TimeCreatedFormatted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateModificationFormatted)
+                    @(item.TimeModificationFormatted)
+                </td>
+                <td>
+                    <a asp-action="EditSchedule" asp-route-id="@item.Id" class="btn btn-warning m-1" title="Modificar Horario">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a asp-action="DeleteSchedule" asp-route-id="@item.Id" class="btn btn-danger m-1" title="Eliminar Horario">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+
+@section Scripts {
+    <script>
+        new DataTable('#ResultData', {
+            info: false,
+            order: false,
+            Response: true,
+            pagingType: 'simple_numbers',
+            language: {
+                search: 'Busqueda Rapida :',
+                searchPlaceholder: 'Ingresar',
+                lengthMenu: '_MENU_ Mostrar',
+                emptyTable: 'No Hay Datos Que Coincidan Con Su Criterio De Búsqueda.',
+                zeroRecords: 'No Existen Registros Segun La Busqueda',
+                processing: 'Procesando...',
+            }
+        });
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 8000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+
+        // Comprobar si hay mensajes de éxito y mostrar notificaciones del sistema
+        const successMessages = {
+            Creado: '@TempData["SuccessMessageCreate"]',
+            Modificado: '@TempData["SuccessMessageUpdate"]',
+            Eliminado: '@TempData["SuccessMessageDelete"]'
+        };
+
+        for (const messageType in successMessages) {
+            const message = successMessages[messageType];
+            if (message) {
+                Toast.fire({
+                    icon: "success",
+                    title: `¡${messageType} Exitosamente!`,
+                    text: message
+                });
+            }
+        }
+    </script>
+}

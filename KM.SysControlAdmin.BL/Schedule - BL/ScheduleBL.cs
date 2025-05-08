@@ -22,5 +22,29 @@ namespace KM.SysControlAdmin.BL.Schedule___BL
             return await ScheduleDAL.CreateAsync(schedule);
         }
         #endregion
+
+        #region METODO PARA MOSTRAR TODOS
+        // Metodo Para Listar y Mostrar Todos Los Resultados
+        public async Task<List<Schedule>> GetAllAsync()
+        {
+            return await ScheduleDAL.GetAllAsync();
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Obtener Un Registro Por Su Id
+        public async Task<Schedule> GetByIdAsync(Schedule schedule)
+        {
+            return await ScheduleDAL.GetByIdAsync(schedule);
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registro Existentes En La Base De Datos
+        public async Task<List<Schedule>> SearchAsync(Schedule schedule)
+        {
+            return await ScheduleDAL.SearchAsync(schedule);
+        }
+        #endregion
     }
 }

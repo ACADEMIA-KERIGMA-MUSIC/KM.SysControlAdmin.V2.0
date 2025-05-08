@@ -45,5 +45,65 @@ namespace KM.SysControlAdmin.DAL.Schedule___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA MOSTRAR TODOS
+        // Metodo Para Listar y Mostrar Todos Los Resultados
+        public static async Task<List<Schedule>> GetAllAsync()
+        {
+            var schedules = new List<Schedule>();
+            using (var dbContext = new ContextDB())
+            {
+                schedules = await dbContext.Schedule.ToListAsync();
+            }
+            return schedules;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Obtener Un Registro Por Su Id
+        public static async Task<Schedule> GetByIdAsync(Schedule schedule)
+        {
+            var scheduleDb = new Schedule();
+            using (var dbContext = new ContextDB())
+            {
+                scheduleDb = await dbContext.Schedule.FirstOrDefaultAsync(r => r.Id == schedule.Id);
+            }
+            return scheduleDb!;
+        }
+        #endregion
+
+        #region METODO PARA FILTRAR BUSQUEDA
+        // Metodo Para Filtrar La Busqueda Por Parametros
+        internal static IQueryable<Schedule> QuerySelect(IQueryable<Schedule> query, Schedule schedule)
+        {
+            if (schedule.Id > 0)
+                query = query.Where(r => r.Id == schedule.Id);
+
+            if (schedule.StartTime != default)
+                query = query.Where(r => r.StartTime == schedule.StartTime);
+
+            if (schedule.EndTime != default)
+                query = query.Where(r => r.EndTime == schedule.EndTime);
+
+            query = query.OrderByDescending(r => r.Id);
+
+            return query;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registros Existentes En La Base De Datos
+        public static async Task<List<Schedule>> SearchAsync(Schedule schedule)
+        {
+            var schedules = new List<Schedule>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.Schedule.AsQueryable();
+                select = QuerySelect(select, schedule);
+                schedules = await select.ToListAsync();
+            }
+            return schedules;
+        }
+        #endregion
     }
 }
