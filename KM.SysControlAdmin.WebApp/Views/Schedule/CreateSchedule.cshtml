@@ -1,0 +1,87 @@
+﻿@model KM.SysControlAdmin.EN.Schedule___EN.Schedule
+
+@{
+    ViewData["Title"] = "Crear Horario";
+}
+
+<br />
+<h1>Formulario - Crear Nuevo Horario</h1>
+<br />
+<div class="alert alert-warning"><strong>Datos a tomar en cuenta:</strong> El Formato de hora a usar al crear los horarios es de "24 Horas."</div>
+<span>@ViewBag.Error</span>
+<hr />
+
+<script>
+    async function ShowCreatePrompt() {
+        const { value: formValues } = await Swal.fire({
+            title: 'Ingresa El Nuevo Horario',
+            html: `
+                <label for="startTime"><strong>Hora de Inicio:</strong></label>
+                <input type="time" id="startTime" class="swal2-input">
+                <br />
+                <label for="endTime"><strong>Hora de Fin:</strong></label>
+                <input type="time" id="endTime" class="swal2-input">
+            `,
+            focusConfirm: true,
+            showCancelButton: true,
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true,
+            preConfirm: () => {
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+
+                if (!startTime || startTime === "00:00" || !endTime || endTime === "00:00") {
+                    Swal.showValidationMessage('Por favor, ingrese una hora válida para ambos campos.');
+                }
+
+                return { startTime, endTime };
+            }
+        });
+
+        if (!formValues) {
+            window.location.href = '@Url.Action("Index", "Schedule")'; // Si el usuario cancela, redirige a la lista
+            return;
+        }
+
+        // Confirmación antes de enviar
+        Swal.fire({
+            title: '¿Guardar Nuevo Horario?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, Guardar Horario',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('StartTime').value = formValues.startTime;
+                document.getElementById('EndTime').value = formValues.endTime;
+                document.getElementById('Form').submit();
+            } else {
+                window.location.href = '@Url.Action("Index", "Schedule")';
+            }
+        });
+    }
+
+    window.onload = ShowCreatePrompt;
+
+    function showErrorAlert(message) {
+        Swal.fire({
+            title: 'Error',
+            text: message,
+            icon: 'error'
+        });
+    }
+
+    // Mostrar alerta de ViewBag.Error si es necesario
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        @:showErrorAlert('@ViewBag.Error');
+    }
+</script>
+
+<form asp-action="CreateSchedule" id="Form">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" id="StartTime" name="StartTime" />
+    <input type="hidden" id="EndTime" name="EndTime" />
+</form>
