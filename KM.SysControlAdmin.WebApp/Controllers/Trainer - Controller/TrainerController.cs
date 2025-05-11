@@ -174,5 +174,32 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
             }
         }
         #endregion
+
+        #region METODO PARA MOSTRAR DETALLES
+        // Accion Que Muestra El Detalle De Un Registro
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> DetailsTrainer(int id)
+        {
+            try
+            {
+                Trainer trainer = await trainerBL.GetByIdAsync(new Trainer { Id = id });
+                if (trainer == null)
+                {
+                    return NotFound();
+                }
+                // Convertir el array de bytes en imagen para mostrar en la vista
+                if (trainer.ImageData != null && trainer.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(trainer.ImageData);
+                }
+                return View(trainer); // Retornamos los Detalles a La Vista
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto Membership
+            }
+        }
+        #endregion
     }
 }
