@@ -45,5 +45,13 @@ namespace KM.SysControlAdmin.BL.Trainer___BL
             return await TrainerDAL.SearchAsync(trainer);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Guardar Un Nuevo Registro
+        public async Task<int> UpdateAsync(Trainer trainer)
+        {
+            return await TrainerDAL.UpdateAsync(trainer);
+        }
+        #endregion
     }
 }

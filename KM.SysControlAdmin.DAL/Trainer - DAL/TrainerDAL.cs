@@ -115,5 +115,52 @@ namespace KM.SysControlAdmin.DAL.Trainer___DAL
             return trainers;
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Modificar Un Registro Existente De La Base De Datos
+        public static async Task<int> UpdateAsync(Trainer trainer)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var trainerDB = await dbContext.Trainer.FirstOrDefaultAsync(m => m.Id == trainer.Id);
+                if (trainerDB != null)
+                {
+                    bool trainerExists = await ExistTrainer(trainer, dbContext);
+                    if (trainerExists == false)
+                    {
+                        trainerDB.Name = trainer.Name;
+                        trainerDB.LastName = trainer.LastName;
+                        trainerDB.Dui = trainer.Dui;
+                        trainerDB.DateOfBirth = trainer.DateOfBirth;
+                        trainerDB.Age = trainer.Age;
+                        trainerDB.Gender = trainer.Gender;
+                        trainerDB.CivilStatus = trainer.CivilStatus;
+                        trainerDB.Phone = trainer.Phone;
+                        trainerDB.Address = trainer.Address;
+                        trainerDB.Status = trainer.Status;
+                        trainerDB.CommentsOrObservations = trainer.CommentsOrObservations;
+                        trainerDB.DateCreated = trainer.DateCreated;
+                        trainerDB.DateModification = trainer.DateModification;
+                        trainerDB.ImageData = trainer.ImageData;
+                        trainerDB.EntryDate = trainer.EntryDate;
+                        trainerDB.PersonalEmail = trainer.PersonalEmail;
+
+                        dbContext.Update(trainerDB);
+                        result = await dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Instructutor/Docente Ya Existente, Vuelve a Intentarlo Nuevamente.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Instructor/Docente No Encontrado Para Actualizar.");
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }

@@ -77,7 +77,7 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
 
                 // Guardar en la tabla User
                 int resultUser = await userBL.CreateAsync(user);
-                TempData["SuccessMessageCreate"] = "Instructor/Docente Agregado Exitosamente";
+                TempData["SuccessMessageCreate"] = "Instructor Agregado Exitosamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -98,6 +98,80 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
 
             var trainers = await trainerBL.SearchAsync(trainer);
             return View(trainers);
+        }
+        #endregion
+
+        #region METODO PARA MODIFICAR
+        // Acción que muestra la vista de modificar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> EditTrainer(int id)
+        {
+            try
+            {
+                Trainer trainer = await trainerBL.GetByIdAsync(new Trainer { Id = id });
+                if (trainer == null)
+                {
+                    return NotFound();
+                }
+                // Convertir el array de bytes en imagen para mostrar en la vista
+                if (trainer.ImageData != null && trainer.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(trainer.ImageData);
+                }
+                return View(trainer);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto Membership
+            }
+        }
+
+        // Acción que recibe los datos del formulario para ser enviados a la base de datos
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditTrainer(int id, Trainer trainer, IFormFile imagen)
+        {
+            try
+            {
+                if (id != trainer.Id)
+                {
+                    return BadRequest();
+                }
+                if (imagen != null && imagen.Length > 0) // Verificar si se ha subido una nueva imagen
+                {
+                    const int maxFileSize = 1572864; // 1.5 MB
+                    if (imagen.Length > maxFileSize)
+                    {
+                        throw new Exception("La imagen no debe pesar mas de los 1.5MB.");
+
+                    }
+
+                    byte[] imagenData = null!;
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await imagen.CopyToAsync(memoryStream);
+                        imagenData = memoryStream.ToArray();
+                    }
+                    trainer.ImageData = imagenData; // Asignar el array de bytes de la nueva imagen a la entidad Membership
+                }
+                else
+                {
+                    // Si no se proporciona una nueva imagen, se conserva la imagen existente
+                    Trainer existingTrainer = await trainerBL.GetByIdAsync(new Trainer { Id = id });
+                    trainer.ImageData = existingTrainer.ImageData;
+                }
+                trainer.DateModification = DateTime.Now.GetFechaZonaHoraria();
+                int result = await trainerBL.UpdateAsync(trainer);
+                TempData["SuccessMessageUpdate"] = "Instructor Modificado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(trainer); // Devolver la vista con el objeto Membership para que el usuario pueda corregir los datos
+            }
         }
         #endregion
     }
