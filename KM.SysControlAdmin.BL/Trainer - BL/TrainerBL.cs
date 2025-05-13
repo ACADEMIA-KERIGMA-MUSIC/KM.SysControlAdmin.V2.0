@@ -53,5 +53,13 @@ namespace KM.SysControlAdmin.BL.Trainer___BL
             return await TrainerDAL.UpdateAsync(trainer);
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public async Task<int> DeleteAsync(Trainer trainer)
+        {
+            return await TrainerDAL.DeleteAsync(trainer);
+        }
+        #endregion
     }
 }

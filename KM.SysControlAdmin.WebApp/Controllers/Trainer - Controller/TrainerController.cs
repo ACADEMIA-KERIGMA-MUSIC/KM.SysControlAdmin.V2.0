@@ -201,5 +201,58 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
             }
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Accion Que Muestra La Vista De Eliminar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> DeleteTrainer(int id)
+        {
+            try
+            {
+                Trainer trainer = await trainerBL.GetByIdAsync(new Trainer { Id = id });
+
+                if (trainer == null)
+                {
+                    return NotFound();
+                }
+                // Convertir el array de bytes en imagen para mostrar en la vista
+                if (trainer.ImageData != null && trainer.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(trainer.ImageData);
+                }
+                return View(trainer);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto Membership
+            }
+        }
+
+        // Accion Que Recibe Los Datos Del Formulario Para Ser Enviados a La BD
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteTrainer(int id, Trainer trainer)
+        {
+            try
+            {
+                Trainer trainerDB = await trainerBL.GetByIdAsync(trainer);
+                int result = await trainerBL.DeleteAsync(trainerDB);
+                TempData["SuccessMessageDelete"] = "Instructor/Docente Eliminado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                var trainerDB = await trainerBL.GetByIdAsync(trainer);
+                if (trainerDB == null)
+                    trainerDB = new Trainer();
+                return View(trainerDB);
+            }
+        }
+        #endregion
+
+
     }
 }
