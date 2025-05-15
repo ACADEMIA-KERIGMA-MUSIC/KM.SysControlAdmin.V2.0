@@ -75,7 +75,7 @@
                 <div class="form-group">
                     <label asp-for="IdSchedule" class="control-label"></label>
                     <select class="form-select" id="IdSchedule" name="IdSchedule">
-                        <option selected>Seleccionar</option>
+                        <option selected>SELECCIONAR</option>
                         @foreach (var schedule in schedules!)
                         {
                             <option value="@schedule.Id">@schedule.StartTimeFormatted - @schedule.EndTimeFormatted</option>
@@ -86,7 +86,7 @@
                 <div class="form-group">
                     <label asp-for="IdTrainer" class="control-label"></label>
                     <select class="form-select" name="IdTrainer">
-                        <option selected>Seleccionar</option>
+                        <option selected>SELECCIONAR</option>
                         @foreach (var item in trainers!)
                         {
                             <option value="@item.Id">@item.Name @item.LastName - @item.Code</option>
@@ -97,9 +97,9 @@
                 <div class="form-group">
                     <label asp-for="Status" class="control-label"></label>
                     <select class="form-select" name="Status">
-                        <option>Seleccionar</option>
-                        <option selected value="1">Activo</option>
-                        <option value="2">Inactivo</option>
+                        <option value="">SELECCIONAR</option>
+                        <option selected value="1">ACTIVO</option>
+                        <option value="2">INACTIVO</option>
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
