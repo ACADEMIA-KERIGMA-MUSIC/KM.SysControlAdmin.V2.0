@@ -1,0 +1,122 @@
+﻿@model KM.SysControlAdmin.EN.Trainer___EN.Trainer
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Ficha_@Model.Name @Model.LastName - @Model.Dui</title>
+    <link href="~/css/Trainer/DesignGeneratePDF.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Encavezado -->
+    <table>
+        <tr class="encavezado">
+            <td class="logo-principal">
+                <img src="~/assets/img/logos/Icon Kerigma Music.png" alt="Alternate Text" width="100" />
+            </td>
+            <td class="membretado">
+                <h1>Ficha Instructor Kerigma Music</h1>
+                <p>Credencial Oficial De Instructor</p>
+                <p>Telefono: 0000-0000</p>
+                <p>Correo Electronico: kerigmamusic@gmail.com</p>
+            </td>
+            <td>
+                <!-- Fotografía -->
+                @if (Model.ImageData != null)
+                {
+                    <img src="data:image/png;base64,@Convert.ToBase64String(Model.ImageData!)" alt="Fotografía" class="fotografia" width="100" />
+                }
+            </td>
+        </tr>
+    </table>
+    <br />
+    <!-- Informacion personal-->
+    <div class="sub-encavezado-1">
+        <h3><strong>Información Personal</strong></h3>
+    </div>
+    <br />
+    <div class="content">
+        <p class="codigo"><strong>Codigo de Identidad Interna:</strong> @Model.Code</p>
+        <p class="nombre"><strong>Nombre:</strong> @Model.Name</p>
+        <p class="apellido"><strong>Apellido:</strong> @Model.LastName</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="dui"><strong>Dui:</strong> @Model.Dui</p>
+        <p class="fechadenacimiento"><strong>Fecha de Nacimiento:</strong> @Model.DateOfBirthFormatted</p>
+        <p class="edad"><strong>Edad:</strong> @Model.Age Años</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="genero"><strong>Genero:</strong> @Model.Gender</p>
+        <p class="civilstatus"><strong>Estado Civil:</strong> @Model.CivilStatus</p>
+        <p class="fechadeingreso"><strong>Fecha de Ingreso:</strong> @Model.EntryDateFormatted</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="telefono"><strong>Telefono:</strong> @Model.Phone</p>
+        <p class="correoelectronico"><strong>Correo Electronico:</strong> @Model.PersonalEmail</p>
+        <p class="estado"><strong>Estado:</strong> @(Model.Status == 1 ? "ACTIVO" : "INACTIVO")</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="direccionderesidencia"><strong>Direccion De Residencia:</strong> @Model.Address</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="comentarios-u-observaciones"><strong>Comentarios u Observaciones:</strong> @(Model.CommentsOrObservations != null ? Model.CommentsOrObservations : "Vacío")</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="fechacreacion"><strong>Fecha de Creación:</strong> @Model.DateCreatedFormatted - @Model.TimeCreatedFormatted</p>
+        <p class="fechamodificacion"><strong>Fecha de Modificación:</strong> @Model.DateModificationFormatted - @Model.TimeModificationFormatted</p>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <!-- Pie de pagina-->
+    <footer class="footer">Ficha Instructor Academia Kerigma Music <span id="currentYear"></span> © | Generado en Sistema de Control Administrativo Kerigma Music.</footer>
+
+</body>
+</html>

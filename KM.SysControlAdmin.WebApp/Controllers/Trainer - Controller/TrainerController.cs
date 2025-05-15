@@ -8,6 +8,7 @@ using KM.SysControlAdmin.EN.User___EN;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Rotativa.AspNetCore;
 
 
 #endregion
@@ -253,6 +254,18 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
         }
         #endregion
 
-
+        #region METODO PARA REPORTE
+        // Metodo Para Generar Ficha o Reporte En PDF
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<ActionResult> GeneratePDFfileTrainer(int id)
+        {
+            var generatePDF = await trainerBL.GetByIdAsync(new Trainer { Id = id });
+            string fileName = $"FichaDocente_{generatePDF.Name}_{generatePDF.LastName}_{generatePDF.Dui}_KM.pdf";
+            return new ViewAsPdf("GeneratePDFfileTrainer", generatePDF)
+            {
+                FileName = fileName
+            };
+        }
+        #endregion
     }
 }
