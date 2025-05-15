@@ -91,5 +91,111 @@ namespace KM.SysControlAdmin.DAL.Course___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA MOSTRAR
+        // Metodo Para Mostrar La Lista De Registros
+        public static async Task<List<Course>> GetAllAsync()
+        {
+            var courses = new List<Course>();
+            using (var dbContext = new ContextDB())
+            {
+                courses = await dbContext.Course.ToListAsync();
+            }
+            return courses;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Mostrar Un Registro En Base A Su Id
+        public static async Task<Course> GetByIdAsync(Course course)
+        {
+            var courseDB = new Course();
+
+            // Un bloque de conexión que mientras se permanezca en el bloque, la base de datos permanecerá abierta y al terminar se destruirá
+            using (var dbContext = new ContextDB())
+            {
+                courseDB = await dbContext.Course
+                    .Include(c => c.Schedule).Include(c => c.Trainer)
+                    .FirstOrDefaultAsync(m => m.Id == course.Id);
+            }
+
+            return courseDB!; // Retornamos el registro encontrado
+        }
+
+        // Normalmente el metodo deberia ser asi como el siguiente pero, por modificaciones en
+        // el proceso de servidores se a modificado pero se deja la forma normal para aprenderla.
+        // *********** Metodo Para Mostrar Un Registro En Base A Su Id *************
+        //public static async Task<Course> GetByIdAsync(Course course)
+        //{
+        //    var courseDB = new Course();
+        //    using (var dbContext = new ContextDB())
+        //    {
+        //        courseDB = await dbContext.Course.FirstOrDefaultAsync(c => c.Id == course.Id);
+        //    }
+        //    return courseDB!;
+        //}
+        #endregion
+
+        #region METODO PARA BUSCAR REGISTROS MEDIANTE EL USO DE FILTROS
+        // Metodo Para Buscar Por Filtros
+        // IQueryable es una interfaz que toma un coleccion a la cual se le pueden implementar multiples consultas (Filtros)
+        internal static IQueryable<Course> QuerySelect(IQueryable<Course> query, Course course)
+        {
+            // Por ID
+            if (course.Id > 0)
+                query = query.Where(c => c.Id == course.Id);
+
+            // Por Su Instructor
+            if (course.IdTrainer > 0)
+                query = query.Where(c => c.IdTrainer == course.IdTrainer);
+
+            // Por Codigo, Si es verdadero lo vuelve falso y viceversa 
+            if (!string.IsNullOrWhiteSpace(course.Code))
+                query = query.Where(c => c.Code.Contains(course.Code));
+
+            // Por Nomnbre, Si es verdadero lo vuelve falso y viceversa 
+            if (!string.IsNullOrWhiteSpace(course.Name))
+                query = query.Where(c => c.Name.Contains(course.Name));
+
+            // Por Su Estatus
+            if (course.Status > 0)
+                query = query.Where(c => c.Status == course.Status);
+
+            // Ordenamos de Manera Desendente
+            query = query.OrderByDescending(c => c.Id).AsQueryable();
+
+            return query;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo para Buscar Registros Existentes
+        public static async Task<List<Course>> SearchAsync(Course course)
+        {
+            var courses = new List<Course>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.Course.AsQueryable();
+                select = QuerySelect(select, course);
+                courses = await select.ToListAsync();
+            }
+            return courses;
+        }
+        #endregion
+
+        #region METODO PARA INCLUIR HORARIO E INSTRUCTOR
+        // Método que incluye el Horario y el Instructor para la búsqueda
+        public static async Task<List<Course>> SearchIncludeScheduleAndTrainerAsync(Course course)
+        {
+            var courses = new List<Course>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.Course.AsQueryable();
+                select = QuerySelect(select, course).Include(c => c.Schedule).Include(c => c.Trainer).AsQueryable();
+                courses = await select.ToListAsync();
+            }
+            return courses;
+        }
+        #endregion
     }
 }

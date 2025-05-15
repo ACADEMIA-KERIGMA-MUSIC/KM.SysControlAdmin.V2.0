@@ -56,5 +56,23 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Course___Controller
             }
         }
         #endregion
+
+        #region METODO PARA MOSTRAR INDEX
+        // Accion Para Mostrar La Vista Index
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> Index(Course course = null!)
+        {
+            if (course == null)
+                course = new Course();
+
+            var courses = await courseBL.SearchIncludeScheduleAndTrainerAsync(course);
+            var trainer = await trainerBL.GetAllAsync();
+            var schedule = await scheduleBL.GetAllAsync();
+
+            ViewBag.Trainers = trainer;
+            ViewBag.Schedule = schedule;
+            return View(courses);
+        }
+        #endregion
     }
 }
