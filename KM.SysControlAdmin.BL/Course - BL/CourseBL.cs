@@ -70,5 +70,13 @@ namespace KM.SysControlAdmin.BL.Course___BL
             return await CourseDAL.UpdateAsync(course);
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public async Task<int> DeleteAsync(Course course)
+        {
+            return await CourseDAL.DeleteAsync(course);
+        }
+        #endregion
     }
 }

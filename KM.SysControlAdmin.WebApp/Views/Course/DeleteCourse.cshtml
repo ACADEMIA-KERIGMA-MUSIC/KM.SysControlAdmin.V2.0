@@ -1,0 +1,130 @@
+﻿@model KM.SysControlAdmin.EN.Course___EN.Course
+
+@{
+    ViewData["Title"] = "Eliminar Curso";
+}
+
+<br />
+<h1>Formulario - Eliminar Curso</h1>
+<br />
+<p class="alert alert-danger">¿Estas Seguro De Eliminar el Siguiente Registro? Recuerda No Puedes Revertir Los Cambios.</p>
+<div>
+    <hr />
+    <br />
+    <h2>Información Del Curso</h2>
+    <br />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ExternalFee)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ExternalFee)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ScholarshipFee)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ScholarshipFee)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FormattedStartTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FormattedEndTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaxStudent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaxStudent) Estudiantes
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdSchedule)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Schedule!.StartTimeFormatted) - @Html.DisplayFor(model => model.Schedule!.EndTimeFormatted)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdTrainer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trainer!.Name) @Html.DisplayFor(model => model.Trainer!.LastName) - @Html.DisplayFor(model => model.Trainer!.Code)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Status == 1)
+            {
+                <span>Activo</span>
+            }
+            else if (Model.Status == 2)
+            {
+                <span>Inactivo</span>
+            }
+        </dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DateCreated)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DateCreatedFormatted) - @Html.DisplayFor(model => model.TimeCreatedFormatted)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DateModification)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DateModificationFormatted) - @Html.DisplayFor(model => model.TimeModificationFormatted)</dd>
+    </dl>
+    <br />
+    <form id="Form" asp-action="DeleteCourse" onsubmit="CreateRecord(event)">
+        <input type="hidden" asp-for="Id" />
+        <a class="btn btn-outline-secondary" asp-action="Index">Regresar a La Lista</a> |
+        <input type="submit" value="Eliminar Curso" class="btn btn-danger" />
+    </form>
+</div>
+@section Scripts {
+    <script>
+        function showErrorAlert(message) {
+            Swal.fire({
+                title: 'Error',
+                text: message,
+                icon: 'error'
+            });
+        }
+        // Mostrar alerta de ViewBag.Error si es necesario
+        @if (!string.IsNullOrEmpty(ViewBag.Error))
+        {
+            @:showErrorAlert('@ViewBag.Error');
+        }
+        function CreateRecord(e) {
+            e.preventDefault();
+            const form = document.getElementById('Form');
+
+            Swal.fire({
+                title: '¿Eliminar Este Curso?',
+                text: '¿Estas Seguro De Eliminar el Siguiente Curso? Recuerda No Puedes Revertir Los Cambios',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, Eliminar Curso',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+}

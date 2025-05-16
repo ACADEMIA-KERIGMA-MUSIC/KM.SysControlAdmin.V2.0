@@ -159,5 +159,62 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Course___Controller
             }
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Accion Que Muestra La Vista De Eliminar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> DeleteCourse(int id)
+        {
+            try
+            {
+                Course course = await courseBL.GetByIdAsync(new Course { Id = id });
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                // Obtén las entidades relacionadas Trainer y Schedule
+                course.Trainer = await trainerBL.GetByIdAsync(new Trainer { Id = course.IdTrainer });
+                course.Schedule = await scheduleBL.GetByIdAsync(new Schedule { Id = course.IdSchedule });
+
+                // Comprueba si las entidades relacionadas existen
+                if (course.Trainer == null || course.Schedule == null)
+                {
+                    return NotFound();
+                }
+                return View(course); // Retorna los detalles a la vista
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Errors = ex.Message;
+                return View();
+            }
+        }
+
+        // Accion Que Recibe Los Datos Del Formulario Para Ser Enviados a La BD
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCourse(int id, Course course)
+        {
+            try
+            {
+                Course courseDB = await courseBL.GetByIdAsync(course);
+                int result = await courseBL.DeleteAsync(courseDB);
+                TempData["SuccessMessageDelete"] = "Curso Eliminado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                var courseDB = await courseBL.GetByIdAsync(course);
+                if (courseDB == null)
+                    courseDB = new Course();
+                if (courseDB.Id > 0)
+                    courseDB.Trainer = await trainerBL.GetByIdAsync(new Trainer { Id = courseDB.IdTrainer });
+                courseDB.Schedule = await scheduleBL.GetByIdAsync(new Schedule { Id = courseDB.IdSchedule });
+                return View(courseDB);
+            }
+        }
+        #endregion
     }
 }
