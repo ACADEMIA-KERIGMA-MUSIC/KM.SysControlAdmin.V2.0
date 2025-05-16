@@ -74,5 +74,55 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Course___Controller
             return View(courses);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Acción que muestra la vista de modificar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> EditCourse(int id)
+        {
+            try
+            {
+                Course course = await courseBL.GetByIdAsync(new Course { Id = id });
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                ViewBag.Trainers = await trainerBL.GetAllAsync();
+                ViewBag.Schedule = await scheduleBL.GetAllAsync();
+                return View(course);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // Acción que recibe los datos del formulario para ser enviados a la base de datos
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCourse(int id, Course course)
+        {
+            try
+            {
+                if (id != course.Id)
+                {
+                    return BadRequest();
+                }
+                course.DateModification = DateTime.Now.GetFechaZonaHoraria();
+                int result = await courseBL.UpdateAsync(course);
+                TempData["SuccessMessageUpdate"] = "Curso Modificado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.Trainers = await trainerBL.GetAllAsync();
+                ViewBag.Schedule = await scheduleBL.GetAllAsync();
+                return View(course);
+            }
+        }
+        #endregion
     }
 }

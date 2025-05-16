@@ -197,5 +197,58 @@ namespace KM.SysControlAdmin.DAL.Course___DAL
             return courses;
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        public static async Task<int> UpdateAsync(Course course)
+        {
+            int result = 0;
+
+            using (var dbContext = new ContextDB())
+            {
+                var courseDB = await dbContext.Course.FirstOrDefaultAsync(c => c.Id == course.Id);
+                if (courseDB == null)
+                {
+                    throw new Exception("Curso no encontrado para actualizar.");
+                }
+
+                // Verificar si ya existe otro curso con el mismo código
+                bool courseExists = await dbContext.Course.AnyAsync(c => c.Id != course.Id && c.Code == course.Code);
+                if (courseExists)
+                {
+                    throw new Exception("Ya existe otro curso con el mismo código. Vuelve a intentarlo.");
+                }
+
+                // Validar que el horario esté activo
+                if (!await StatusSchedule(course.IdSchedule, dbContext))
+                {
+                    throw new Exception("El curso no puede modificarse porque el horario no está disponible.");
+                }
+
+                // Validar que el horario esté activo
+                if (!await IsTrainerActive(course.IdTrainer, dbContext))
+                {
+                    throw new Exception("El curso no puede modificarse porque el Instructor no está disponible.");
+                }
+
+                // Actualizar los datos del curso
+                courseDB.Code = course.Code;
+                courseDB.Name = course.Name;
+                courseDB.ExternalFee = course.ExternalFee;
+                courseDB.ScholarshipFee = course.ScholarshipFee;
+                courseDB.StartTime = course.StartTime;
+                courseDB.EndTime = course.EndTime;
+                courseDB.MaxStudent = course.MaxStudent;
+                courseDB.IdSchedule = course.IdSchedule;
+                courseDB.IdTrainer = course.IdTrainer;
+                courseDB.Status = course.Status;
+                courseDB.DateModification = course.DateModification;
+
+                dbContext.Update(courseDB);
+                result = await dbContext.SaveChangesAsync();
+            }
+
+            return result;
+        }
+        #endregion
     }
 }

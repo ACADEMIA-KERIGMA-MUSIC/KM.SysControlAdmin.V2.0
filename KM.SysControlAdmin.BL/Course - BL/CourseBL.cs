@@ -62,5 +62,13 @@ namespace KM.SysControlAdmin.BL.Course___BL
             return await CourseDAL.SearchIncludeScheduleAndTrainerAsync(course);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Metodo Para Guardar Un Nuevo Registro
+        public async Task<int> UpdateAsync(Course course)
+        {
+            return await CourseDAL.UpdateAsync(course);
+        }
+        #endregion
     }
 }
