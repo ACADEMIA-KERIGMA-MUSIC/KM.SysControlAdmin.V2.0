@@ -1,0 +1,292 @@
+﻿@model KM.SysControlAdmin.EN.Student___EN.Student
+
+@{
+    ViewData["Title"] = "Agregar Alumno/a";
+}
+
+<link href="/css/Student/DesignCreateAndEdit.css" rel="stylesheet" />
+
+<br />
+<h1>Formulario - Agregar Alumno/a</h1>
+<br />
+<div class="alert alert-warning">El codigo de estudiante se genera de manera automatica en base a los datos ingresados</div>
+<span>@ViewBag.Error</span>
+<hr />
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <form id="Form" asp-action="CreateScholarshipForm" onsubmit="CreateRecord(event)" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h2>Información Personal</h2>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label asp-for="StudentCode" class="control-label"></label>
+                    <input asp-for="StudentCode" id="StudentCode" class="form-control" placeholder="*Se auto-genera*" readonly maxlength="10" />
+                    <span asp-validation-for="StudentCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProjectCode" class="control-label"></label>
+                    <input asp-for="ProjectCode" id="CodeProyect" class="form-control" placeholder="Ingresar" maxlength="6" />
+                    <span asp-validation-for="ProjectCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ParticipantCode" class="control-label"></label>
+                    <input asp-for="ParticipantCode" id="ParticipantCode" class="form-control" placeholder="Ingresar" maxlength="5" />
+                    <span asp-validation-for="ParticipantCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" id="Name" class="form-control form-input" placeholder="Ingresar" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" id="LastName" class="form-control form-input" placeholder="Ingresar" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateOfBirth" class="control-label"></label>
+                    <input asp-for="DateOfBirth" id="DateOfBirth" class="form-control form-input" type="date" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Age" class="control-label"></label>
+                    <input asp-for="Age" id="Age" class="form-control" placeholder="*Se auto-calcula*" readonly />
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Gender" class="control-label"></label>
+                    <select name="Gender" id="Gender" class="form-select">
+                        <option value="" selected>SELECCIONAR</option>
+                        <option value="MASCULINO">MASCULINO</option>
+                        <option value="FEMENINO">FEMENINO</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label"></label>
+                    <select name="Status" id="Status" class="form-select" required>
+                        <option value="">SELECCIONAR</option>
+                        <option value="1" selected>ACTIVO</option>
+                        <option value="2">INACTIVO</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PersonalEmail" class="control-label"></label>
+                    <input asp-for="PersonalEmail" id="PersonalEmail" class="form-control" required placeholder="recuperacion@gmail.com" type="email" />
+                    <span asp-validation-for="PersonalEmail" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="imagen">Seleccionar Fotografía:</label>
+                    <input type="file" id="imagen" class="form-control" name="imagen" onchange="mostrarImagen()" asp-for="ImageData" />
+                </div>
+            </div>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label asp-for="CommentsOrObservations" class="control-label"></label>
+                    <input asp-for="CommentsOrObservations" id="CommentsOrObservations" class="form-control" placeholder="Opcional" />
+                </div>
+            </div>
+            <br />
+            <h2>Información Del Representante</h2>
+            <span><span style="color: red">*</span>Información necesaria si el Alumno/a es menor de edad <span style="color: red">*</span></span>
+            <br />
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label asp-for="RepresentativeName" class="control-label"></label>
+                    <input asp-for="RepresentativeName" id="RepresentativeName" class="form-control" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="RepresentativeLastName" class="control-label"></label>
+                    <input asp-for="RepresentativeLastName" id="RepresentativeLastName" class="form-control" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Relationship" class="control-label"></label>
+                    <select name="Relationship" id="Relationship" class="form-select">
+                        <option value="">SELECCIONAR</option>
+                        <option value="PADRE">PADRE</option>
+                        <option value="MADRE">MADRE</option>
+                        <option value="HERMANO/A">HERMANO/A</option>
+                        <option value="TIO/A">TIO/A</option>
+                        <option value="ABUELO/A">ABUELO/A</option>
+                        <option value="OTRO">OTRO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TelephoneResponsible" class="control-label"></label>
+                    <input asp-for="TelephoneResponsible" id="TelephoneResponsible" class="form-control" placeholder="0000-0000" />
+                </div>
+            </div>
+            <br />
+            <h2>Información Adicional</h2>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label asp-for="IdRole" class="control-label"></label>
+                    <select class="form-select">
+                        <option>Alumno</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" id="Email" class="form-control" required placeholder="ejemplo@kerigmammusic.com" type="email" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" required placeholder="XXXXXXXXXX" />
+                </div>
+            </div>
+            <br />
+            <div>
+                <p><strong>Vista Previa:</strong></p>
+                <img id="imagenPreview" src="#" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 200px; display: none; border: 1px solid #d3d3d3;" />
+            </div>
+            <br />
+            <div class="form-group">
+                <a class="btn btn-outline-secondary" asp-action="Index">Regresar a La Lista</a> |
+                <input type="submit" value="Agregar Alumno/a" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function showErrorAlert(message) {
+            Swal.fire({
+                title: 'Error',
+                text: message,
+                icon: 'error'
+            });
+        }
+
+        // Mostrar alerta de error si hay un error en ViewBag
+        @if (!string.IsNullOrEmpty(ViewBag.Error))
+        {
+            @:showErrorAlert('@ViewBag.Error');
+        }
+
+        function actualizarCodigoEstudiante() {
+            const nombre = document.getElementById("Name").value.trim().toLowerCase();
+            const apellido = document.getElementById("LastName").value.trim().toLowerCase();
+            const fechaNacimiento = document.getElementById("DateOfBirth").value;
+
+            if (nombre && apellido && fechaNacimiento) {
+                const inicialNombre = nombre.charAt(0);
+                const inicialApellido = apellido.charAt(0);
+                const anioNacimiento = new Date(fechaNacimiento).getFullYear().toString().slice(-2);
+                const anioActual = new Date().getFullYear().toString().slice(-2);
+
+                const codigoEstudiante = `${inicialNombre}${inicialApellido}${anioNacimiento}${anioActual}`;
+                document.getElementById("StudentCode").value = codigoEstudiante;
+
+                const email = `${codigoEstudiante}@@kerigmamusic.com`;
+                document.getElementById("Email").value = email;
+            }
+        }
+
+        function calcularEdad() {
+            const fechaNacimiento = new Date(document.getElementById("DateOfBirth").value);
+            if (isNaN(fechaNacimiento)) return;
+
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+            const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+
+            if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                edad--;
+            }
+
+            document.getElementById("Age").value = edad;
+        }
+
+        function mostrarImagen() {
+            const input = document.getElementById("imagen");
+            const preview = document.getElementById("imagenPreview");
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function formatTelephone() {
+            const input = document.getElementById("TelephoneResponsible");
+            let value = input.value.replace(/\D/g, ""); // Elimina todo lo que no sea número
+
+            if (value.length > 4) {
+                value = `${value.slice(0, 4)}-${value.slice(4, 8)}`; // Formato 0000-0000
+            }
+
+            input.value = value;
+        }
+
+        function CreateRecord(e) {
+            e.preventDefault();
+            const form = document.getElementById("Form");
+
+            const regexNombreApellido = /^[A-Za-zÑñÁÉÍÓÚáéíóú ]+$/;
+            const regexCodigo = /^[A-Za-z0-9]+$/;
+
+            const nombre = document.getElementById("Name").value;
+            const apellido = document.getElementById("LastName").value;
+            const codigoProyecto = document.getElementById("CodeProyect").value;
+            const codigoEstudiante = document.getElementById("StudentCode").value;
+
+            if (!regexNombreApellido.test(nombre) || !regexNombreApellido.test(apellido)) {
+                Swal.fire({
+                    title: "Advertencia",
+                    text: "Los campos Nombre y Apellido solo deben contener letras.",
+                    icon: "warning",
+                });
+                return;
+            }
+
+            if (!regexCodigo.test(codigoProyecto)) {
+                Swal.fire({
+                    title: "Advertencia",
+                    text: "El campo Código de Proyecto solo debe contener letras y números.",
+                    icon: "warning",
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: "¿Guardar Nuevo Estudiante?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Sí, Guardar Estudiante",
+                cancelButtonText: "Cancelar",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+
+        document.getElementById("Name").addEventListener("input", actualizarCodigoEstudiante);
+        document.getElementById("LastName").addEventListener("input", actualizarCodigoEstudiante);
+        document.getElementById("DateOfBirth").addEventListener("input", () => {
+            actualizarCodigoEstudiante();
+            calcularEdad();
+        });
+
+        document.getElementById("imagen").addEventListener("change", mostrarImagen);
+        document.getElementById("Form").addEventListener("submit", CreateRecord);
+
+        // Escuchar cambios en el campo de teléfono para formatear en tiempo real
+        document.getElementById("TelephoneResponsible").addEventListener("input", formatTelephone);
+    });
+</script>
