@@ -164,5 +164,18 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Student___Controller
             }
         }
         #endregion
+
+        #region METODO PARA MOSTRAR INDEX
+        // Accion Para Mostrar La Vista Index
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> Index(Student student = null!)
+        {
+            if (student == null)
+                student = new Student();
+
+            var students = await studentBL.SearchAsync(student);
+            return View(students);
+        }
+        #endregion
     }
 }

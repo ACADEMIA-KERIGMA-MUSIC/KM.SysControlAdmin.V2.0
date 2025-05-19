@@ -52,5 +52,76 @@ namespace KM.SysControlAdmin.DAL.Student___DAL
             return result;  // Si se realizo con exito devuelve 1 sino devuelve 0
         }
         #endregion
+
+        #region METODO PARA MOSTRAR
+        // Metodo Para Mostrar La Lista De Registros
+        public static async Task<List<Student>> GetAllAsync()
+        {
+            var students = new List<Student>();
+            using (var dbContext = new ContextDB())
+            {
+                students = await dbContext.Student.ToListAsync();
+            }
+            return students;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Mostrar Un Registro En Base A Su Id
+        public static async Task<Student> GetByIdAsync(Student student)
+        {
+            var studentDB = new Student();
+            // Un bloque de conexion que mientras se permanezca en el bloque la base de datos permanecera abierta y al terminar se destruira
+            using (var dbContext = new ContextDB())
+            {
+                studentDB = await dbContext.Student.FirstOrDefaultAsync(m => m.Id == student.Id);
+            }
+            return studentDB!; // Retornamos el Registro Encontrado
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR REGISTROS MEDIANTE EL USO DE FILTROS
+        // Metodo Para Buscar Por Filtros
+        // IQueryable es una interfaz que toma un coleccion a la cual se le pueden implementar multiples consultas (Filtros)
+        internal static IQueryable<Student> QuerySelect(IQueryable<Student> query, Student student)
+        {
+            // Por ID
+            if (student.Id > 0)
+                query = query.Where(m => m.Id == student.Id);
+
+            if (!string.IsNullOrWhiteSpace(student.StudentCode))
+                query = query.Where(m => m.StudentCode.Contains(student.StudentCode));
+
+            if (!string.IsNullOrWhiteSpace(student.Gender))
+                query = query.Where(m => m.Gender.Contains(student.Gender));
+
+            if (!string.IsNullOrWhiteSpace(student.Name))
+                query = query.Where(m => m.Name.Contains(student.Name));
+
+            if (!string.IsNullOrWhiteSpace(student.LastName))
+                query = query.Where(m => m.LastName.Contains(student.LastName));
+
+            // Ordenamos de Manera Desendente
+            query = query.OrderByDescending(c => c.Id).AsQueryable();
+
+            return query;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo para Buscar Registros Existentes
+        public static async Task<List<Student>> SearchAsync(Student student)
+        {
+            var students = new List<Student>();
+            // Un bloque de conexion que mientras se permanezca en el bloque la base de datos permanecera abierta y al terminar se destruira
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.Student.AsQueryable();
+                select = QuerySelect(select, student);
+                students = await select.ToListAsync();
+            }
+            return students;
+        }
+        #endregion
     }
 }

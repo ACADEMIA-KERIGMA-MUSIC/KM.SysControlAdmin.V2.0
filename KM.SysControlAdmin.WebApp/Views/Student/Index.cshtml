@@ -1,0 +1,191 @@
+﻿@model IEnumerable<KM.SysControlAdmin.EN.Student___EN.Student>
+
+@{
+    ViewData["Title"] = "Alumnos/as";
+}
+
+<link href="/css/Student/DesignCreateAndEdit.css" rel="stylesheet" />
+
+<br />
+<h>Mantenimiento De Alumnos/as</h>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Index">
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="StudentCode">Codigo del Estudiante</label>
+                    <input type="text" class="form-control" name="StudentCode" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label for="Gender" class="control-label">Genero</label>
+                    <select name="Gender" id="Gender" class="form-select">
+                        <option value="" selected>SELECCIONAR</option>
+                        <option value="MASCULINO">MASCULINO</option>
+                        <option value="FEMENINO">FEMENINO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Name">Nombres</label>
+                    <input type="text" class="form-control" name="Name" placeholder="Ingresar" />
+                </div>
+                <div class="form-group">
+                    <label for="LastName">Apellidos</label>
+                    <input type="text" class="form-control" name="LastName" placeholder="Ingresar" />
+                </div>
+            </div>
+            <br />
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-outline-success m-1" value="Buscar Alumno/a" /> |
+                    <button type="button" id="createButton" class="btn btn-primary">Crear Nuevo Alumno/a</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<h2 style="text-align:center;">Tabla de Resultados</h2>
+<br />
+<table id="ResultData" class="hover" style="width:100%; text-align:center;">
+    <thead>
+        <tr>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.StudentCode)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.ProjectCode)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.ParticipantCode)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th style="text-align:center;">
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th style="text-align:center;">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentCode)
+                </td>
+                @if (item.ProjectCode == "")
+                {
+                    <td>NO APLICA</td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectCode)
+                    </td>
+                }
+                @if (item.ParticipantCode == "")
+                {
+                    <td>NO APLICA</td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParticipantCode)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    <form asp-action="RedirectBasedOnValidation" method="post" style="display:inline;" title="Modificar Alumno/a">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-warning m-1"><i class="fas fa-edit"></i></button>
+                    </form>
+                    <a asp-action="DetailsStudent" asp-route-id="@item.Id" class="btn btn-outline-info m-1" title="Detalles Del Alumno/a">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a asp-action="DeleteStudent" asp-route-id="@item.Id" class="btn btn-danger m-1" title="Eliminar Alumno/a">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                    <a asp-action="GeneratePDFfileStudent" asp-route-id="@item.Id" class="btn btn-primary" title="Generar Pdf">
+                        <i class="fas fa-file-pdf"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+
+@section Scripts {
+    <script>
+        // Configuración para la tabla principal
+        new DataTable('#ResultData', {
+            info: false,
+            order: false,
+            Response: true,
+            pagingType: 'simple_numbers',
+            language: {
+                search: 'Busqueda Rapida :',
+                searchPlaceholder: 'Ingresar',
+                lengthMenu: '_MENU_ Mostrar',
+                emptyTable: 'No Hay Datos Que Coincidan Con Su Criterio De Búsqueda.',
+                zeroRecords: 'No Existen Registros Segun La Busqueda',
+                processing: 'Procesando...',
+            }
+        });
+
+        // Configuración de SweetAlert2
+        document.getElementById("createButton").addEventListener("click", function () {
+            Swal.fire({
+                title: "¿Qué tipo de Alumno deseas agregar?",
+                showDenyButton: true,
+                confirmButtonText: "ALUMNO BECADO",
+                denyButtonText: "ALUMNO EXTERNO",
+                icon: "question",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "@Url.Action("CreateScholarshipForm", "Student")";
+                } else if (result.isDenied) {
+                    window.location.href = "@Url.Action("CreateExternalForm", "Student")";
+                }
+            });
+        });
+
+        // Configuración de las notificaciones
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 8000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+
+        // Comprobar si hay mensajes de éxito y mostrar notificaciones del sistema
+        const successMessages = {
+            Creado: '@TempData["SuccessMessageCreate"]',
+            Modificado: '@TempData["SuccessMessageUpdate"]',
+            Eliminado: '@TempData["SuccessMessageDelete"]'
+        };
+
+        for (const messageType in successMessages) {
+            const message = successMessages[messageType];
+            if (message) {
+                Toast.fire({
+                    icon: "success",
+                    title: `¡${messageType} Exitosamente!`,
+                    text: message
+                });
+            }
+        }
+    </script>
+}
