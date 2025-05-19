@@ -71,18 +71,41 @@ CREATE TABLE Trainer(
 );
 GO
 CREATE TABLE Course (
-  Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-  Code VARCHAR(15) NOT NULL,
-  [Name] VARCHAR(100) NOT NULL,
-  ExternalFee MONEY NOT NULL,
-  ScholarshipFee MONEY NOT NULL,
-  StartTime DATE NOT NULL,
-  EndTime DATE NOT NULL,
-  MaxStudent INT NULL,
-  [Status] TINYINT NOT NULL,
-  DateCreated DATETIME NOT NULL,
-  DateModification DATETIME NOT NULL,
-  IdSchedule INT NOT NULL FOREIGN KEY REFERENCES Schedule(Id),
-  IdTrainer INT NOT NULL FOREIGN KEY REFERENCES Trainer(Id)
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    Code VARCHAR(15) NOT NULL,
+    [Name] VARCHAR(100) NOT NULL,
+    ExternalFee MONEY NOT NULL,
+    ScholarshipFee MONEY NOT NULL,
+    StartTime DATE NOT NULL,
+    EndTime DATE NOT NULL,
+    MaxStudent INT NULL,
+    [Status] TINYINT NOT NULL,
+    DateCreated DATETIME NOT NULL,
+    DateModification DATETIME NOT NULL,
+    IdSchedule INT NOT NULL FOREIGN KEY REFERENCES Schedule(Id),
+    IdTrainer INT NOT NULL FOREIGN KEY REFERENCES Trainer(Id)
+);
+GO
+CREATE TABLE Student (
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    StudentCode VARCHAR(6) NOT NULL,
+    ProjectCode VARCHAR(6) NULL,
+    ParticipantCode VARCHAR(5) NULL,
+    [Name] VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    Age VARCHAR(3) NOT NULL,
+    ChurchName VARCHAR(100) NULL,
+    [Status] TINYINT NOT NULL,
+    ImageData VARBINARY(MAX) NOT NULL,
+    DateCreated DATETIME NOT NULL,
+    DateModification DATETIME NOT NULL,
+	Gender VARCHAR(20) NOT NULL,
+	PersonalEmail VARCHAR(50) NOT NULL,
+	CommentsOrObservations VARCHAR(300) NULL,
+	RepresentativeName VARCHAR(50) NULL,
+	RepresentativeLastName VARCHAR(50) NULL,
+	Relationship VARCHAR(9) NULL,
+	TelephoneResponsible VARCHAR(9) NULL
 );
 GO
