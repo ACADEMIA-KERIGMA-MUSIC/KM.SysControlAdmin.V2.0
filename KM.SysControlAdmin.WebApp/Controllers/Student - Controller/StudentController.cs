@@ -177,5 +177,180 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Student___Controller
             return View(students);
         }
         #endregion
+
+        #region METODO PARA REDIRIGIR AL EDITAR (ALUMNO BECADO O ALUMNO EXTERNO)
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RedirectBasedOnValidation(int id)
+        {
+            // Obtener el estudiante desde la capa BL
+            var student = studentBL.GetByIdAsync(id).Result;
+
+            // Validar si el estudiante no existe
+            if (student == null)
+            {
+                return NotFound(); // Retornar un error 404 si no se encuentra el registro
+            }
+
+            // Validar los campos del estudiante
+            if (!string.IsNullOrEmpty(student.ProjectCode) && !string.IsNullOrEmpty(student.ParticipantCode))
+            {
+                // Redirigir al formulario de becado
+                return RedirectToAction("EditScholarshipForm", "Student", new { id });
+            }
+            else
+            {
+                // Redirigir al formulario externo
+                return RedirectToAction("EditExternalForm", "Student", new { id });
+            }
+        }
+        #endregion
+
+        #region METODO PARA MODIFCIAR (ALUMNO BECADO)
+        // Acción que muestra la vista de modificar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> EditScholarshipForm(int id)
+        {
+            try
+            {
+                Student student = await studentBL.GetByIdAsync(new Student { Id = id });
+                if (student == null)
+                {
+                    return NotFound();
+                }
+                // Convertir el array de bytes en imagen para mostrar en la vista
+                if (student.ImageData != null && student.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(student.ImageData);
+                }
+                return View(student);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto Membership
+            }
+        }
+
+        // Acción que recibe los datos del formulario para ser enviados a la base de datos
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditScholarshipForm(int id, Student student, IFormFile imagen)
+        {
+            try
+            {
+                if (id != student.Id)
+                {
+                    return BadRequest();
+                }
+                if (imagen != null && imagen.Length > 0) // Verificar si se ha subido una nueva imagen
+                {
+                    const int maxFileSize = 1572864; // 1.5 MB
+                    if (imagen.Length > maxFileSize)
+                    {
+                        throw new Exception("La imagen no debe pesar mas de 1.5MB.");
+                    }
+
+                    byte[] imagenData = null!;
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await imagen.CopyToAsync(memoryStream);
+                        imagenData = memoryStream.ToArray();
+                    }
+                    student.ImageData = imagenData; // Asignar el array de bytes de la nueva imagen a la entidad Membership
+                }
+                else
+                {
+                    // Si no se proporciona una nueva imagen, se conserva la imagen existente
+                    Student existingStudent = await studentBL.GetByIdAsync(new Student { Id = id });
+                    student.ImageData = existingStudent.ImageData;
+                }
+                student.DateModification = DateTime.Now.GetFechaZonaHoraria();
+                int result = await studentBL.UpdateAsyncBecado(student);
+                TempData["SuccessMessageUpdate"] = "Alumno/a Modificado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(student);
+            }
+        }
+        #endregion
+
+        #region METODO PARA MODIFCIAR (ALUMNO EXTERNO)
+        // Acción que muestra la vista de modificar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> EditExternalForm(int id)
+        {
+            try
+            {
+                Student student = await studentBL.GetByIdAsync(new Student { Id = id });
+                if (student == null)
+                {
+                    return NotFound();
+                }
+                // Convertir el array de bytes en imagen para mostrar en la vista
+                if (student.ImageData != null && student.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(student.ImageData);
+                }
+                return View(student);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto Membership
+            }
+        }
+
+        // Acción que recibe los datos del formulario para ser enviados a la base de datos
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditExternalForm(int id, Student student, IFormFile imagen)
+        {
+            try
+            {
+                if (id != student.Id)
+                {
+                    return BadRequest();
+                }
+                if (imagen != null && imagen.Length > 0) // Verificar si se ha subido una nueva imagen
+                {
+                    const int maxFileSize = 1572864; // 1.5 MB
+                    if (imagen.Length > maxFileSize)
+                    {
+                        throw new Exception("La imagen no debe pesar mas de 1.5MB.");
+                    }
+
+                    byte[] imagenData = null!;
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await imagen.CopyToAsync(memoryStream);
+                        imagenData = memoryStream.ToArray();
+                    }
+                    student.ImageData = imagenData; // Asignar el array de bytes de la nueva imagen a la entidad Membership
+                }
+                else
+                {
+                    // Si no se proporciona una nueva imagen, se conserva la imagen existente
+                    Student existingStudent = await studentBL.GetByIdAsync(new Student { Id = id });
+                    student.ImageData = existingStudent.ImageData;
+                }
+                student.DateModification = DateTime.Now.GetFechaZonaHoraria();
+                int result = await studentBL.UpdateAsyncExterno(student);
+                TempData["SuccessMessageUpdate"] = "Alumno/a Modificado Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(student);
+            }
+        }
+        #endregion
     }
 }
