@@ -72,5 +72,13 @@ namespace KM.SysControlAdmin.BL.Student___BL
             return await StudentDAL.UpdateAsyncExterno(student);
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public async Task<int> DeleteAsync(Student student)
+        {
+            return await StudentDAL.DeleteAsync(student);
+        }
+        #endregion
     }
 }
