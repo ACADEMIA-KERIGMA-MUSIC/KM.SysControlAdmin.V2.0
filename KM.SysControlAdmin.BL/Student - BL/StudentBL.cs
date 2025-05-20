@@ -56,5 +56,21 @@ namespace KM.SysControlAdmin.BL.Student___BL
             return await StudentDAL.SearchAsync(student);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR ALUMNO BECADO
+        // Metodo Para Guardar Un Nuevo Registro
+        public async Task<int> UpdateAsyncBecado(Student student)
+        {
+            return await StudentDAL.UpdateAsyncBecado(student);
+        }
+        #endregion
+
+        #region METODO PARA MODIFICAR ALUMNO EXTERNO
+        // Metodo Para Guardar Un Nuevo Registro
+        public async Task<int> UpdateAsyncExterno(Student student)
+        {
+            return await StudentDAL.UpdateAsyncExterno(student);
+        }
+        #endregion
     }
 }

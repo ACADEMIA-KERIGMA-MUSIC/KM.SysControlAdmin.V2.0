@@ -123,5 +123,96 @@ namespace KM.SysControlAdmin.DAL.Student___DAL
             return students;
         }
         #endregion
+
+        #region METODO PARA MODIFICAR ALUMNO BECADO
+        // Metodo Para Modificar Un Registro Existente De La Base De Datos
+        public static async Task<int> UpdateAsyncBecado(Student student)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var studentDB = await dbContext.Student.FirstOrDefaultAsync(m => m.Id == student.Id);
+                if (studentDB != null)
+                {
+                    bool studentExists = await ExistStudent(student, dbContext);
+                    if (studentExists == false)
+                    {
+                        studentDB.ProjectCode = student.ProjectCode;
+                        studentDB.ParticipantCode = student.ParticipantCode;
+                        studentDB.Name = student.Name;
+                        studentDB.LastName = student.LastName;
+                        studentDB.DateOfBirth = student.DateOfBirth;
+                        studentDB.Age = student.Age;
+                        studentDB.Gender = student.Gender;
+                        studentDB.Status = student.Status;
+                        studentDB.PersonalEmail = student.PersonalEmail;
+                        studentDB.ImageData = student.ImageData;
+                        studentDB.CommentsOrObservations = student.CommentsOrObservations;
+                        studentDB.RepresentativeName = student.RepresentativeName;
+                        studentDB.RepresentativeLastName = student.RepresentativeLastName;
+                        studentDB.Relationship = student.Relationship;
+                        studentDB.TelephoneResponsible = student.TelephoneResponsible;
+                        studentDB.DateModification = student.DateModification;
+                        dbContext.Update(studentDB);
+                        result = await dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Alumno/a Ya Existente, Vuelve a Intentarlo Nuevamente.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Alumno/a No Encontrado Para Actualizar.");
+                }
+            }
+            return result;
+        }
+        #endregion
+
+        #region METODO PARA MODIFICAR ALUMNO EXTERNO
+        // Metodo Para Modificar Un Registro Existente De La Base De Datos
+        public static async Task<int> UpdateAsyncExterno(Student student)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var studentDB = await dbContext.Student.FirstOrDefaultAsync(m => m.Id == student.Id);
+                if (studentDB != null)
+                {
+                    bool studentExists = await ExistStudent(student, dbContext);
+                    if (studentExists == false)
+                    {
+                        studentDB.Name = student.Name;
+                        studentDB.LastName = student.LastName;
+                        studentDB.DateOfBirth = student.DateOfBirth;
+                        studentDB.Age = student.Age;
+                        studentDB.Gender = student.Gender;
+                        studentDB.ChurchName = student.ChurchName;
+                        studentDB.Status = student.Status;
+                        studentDB.PersonalEmail = student.PersonalEmail;
+                        studentDB.ImageData = student.ImageData;
+                        studentDB.CommentsOrObservations = student.CommentsOrObservations;
+                        studentDB.RepresentativeName = student.RepresentativeName;
+                        studentDB.RepresentativeLastName = student.RepresentativeLastName;
+                        studentDB.Relationship = student.Relationship;
+                        studentDB.TelephoneResponsible = student.TelephoneResponsible;
+                        studentDB.DateModification = student.DateModification;
+                        dbContext.Update(studentDB);
+                        result = await dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Alumno/a Ya Existente, Vuelve a Intentarlo Nuevamente.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Alumno/a No Encontrado Para Actualizar.");
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }
