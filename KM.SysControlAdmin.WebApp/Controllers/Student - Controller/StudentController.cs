@@ -352,5 +352,32 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Student___Controller
             }
         }
         #endregion
+
+        #region METODO PARA MOSTRAR DETALLES
+        // Accion Que Muestra El Detalle De Un Registro
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> DetailsStudent(int id)
+        {
+            try
+            {
+                Student student = await studentBL.GetByIdAsync(new Student { Id = id });
+                if (student == null)
+                {
+                    return NotFound();
+                }
+                // Convertir el array de bytes en imagen para mostrar en la vista
+                if (student.ImageData != null && student.ImageData.Length > 0)
+                {
+                    ViewBag.ImageUrl = Convert.ToBase64String(student.ImageData);
+                }
+                return View(student); // Retornamos los Detalles a La Vista
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devolver la vista sin ningún objeto Membership
+            }
+        }
+        #endregion
     }
 }
