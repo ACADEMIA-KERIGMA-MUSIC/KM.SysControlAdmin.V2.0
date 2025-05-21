@@ -1,0 +1,151 @@
+﻿/* Config. general */
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+/*Estilo del encavezado*/
+.encavezado {
+    margin: 0px;
+}
+
+.logo-principal {
+    padding-left: 53px;
+}
+
+.membretado {
+    padding-left: 100px;
+    text-align: center;
+}
+
+.membretado h1 {
+    font-size: 25px;
+    margin-bottom: 0px;
+}
+
+.membretado p {
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.fotografia {
+    padding-left: 90px;
+}
+
+/*Estilo sub-encavezados*/
+.sub-encavezado-1 {
+    background-color: #f0f0f0;
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.content {
+    display: flex;
+}
+
+/*Contenido*/
+
+.codigo-de-estudiante {
+    display: inline;
+    margin-left: 25px;
+}
+
+.codigo-de-proyecto {
+    display: inline;
+    margin-left: 25px;
+}
+
+.codigo-de-participante {
+    display: inline;
+    margin-left: 25px;
+}
+
+.nombre {
+    display: inline;
+    margin-left: 25px;
+}
+
+.apellido {
+    display: inline;
+    margin-left: 25px;
+}
+
+.fehca-de-nacimiento {
+    display: inline;
+    margin-left: 25px;
+}
+
+.edad {
+    display: inline;
+    margin-left: 25px;
+}
+
+.genero {
+    display: inline;
+    margin-left: 25px;
+}
+
+.estado {
+    display: inline;
+    margin-left: 25px;
+}
+
+.correo-personal {
+    display: inline;
+    margin-left: 25px;
+}
+
+.nombre-de-iglesia {
+    display: inline;
+    margin-left: 25px;
+}
+
+.fechacreacion {
+    display: inline;
+    margin-left: 25px;
+}
+
+.fechamodificacion {
+    display: inline;
+    margin-left: 25px;
+}
+
+.nombre-del-representante {
+    display: inline;
+    margin-left: 25px;
+}
+
+.apellido-del-representante {
+    display: inline;
+    margin-left: 25px;
+}
+
+.parentesco {
+    display: inline;
+    margin-left: 25px;
+}
+
+.telefono-del-representante {
+    display: inline;
+    margin-left: 25px;
+}
+
+.comentarios-u-observaciones {
+    display: inline; /* Muy importante: inline-block, no inline */
+    margin-left: 25px;
+    max-width: 800px; /* Aproximadamente 50 caracteres de ancho */
+    overflow-wrap: break-word; /* Permite saltar palabra si es necesario */
+    word-break: break-word; /* Asegura que se corte si una palabra es larga */
+}
+
+.footer {
+    position: fixed; /* Fija el footer */
+    bottom: 0; /* Lo coloca en la parte inferior */
+    width: 100%; /* Ocupa todo el ancho */
+    background-color: #f8f9fa; /* Fondo claro (puedes cambiarlo) */
+    color: #6c757d; /* Texto más tenue (gris Bootstrap) */
+    text-align: center; /* Centrado */
+    padding: 10px 0; /* Espaciado */
+    font-size: 0.9rem; /* Tamaño un poco más pequeño */
+    border-top: 1px solid #dee2e6; /* Línea superior sutil */
+}

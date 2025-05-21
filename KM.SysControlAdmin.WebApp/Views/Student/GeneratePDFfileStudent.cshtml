@@ -1,0 +1,131 @@
+﻿@model KM.SysControlAdmin.EN.Student___EN.Student
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha Alumno/a @Html.DisplayFor(model => model.Name)_@Html.DisplayFor(model => model.LastName)_@Html.DisplayFor(model => model.StudentCode)_KM</title>
+    <link href="/css/Student/DesignGeneratePDF.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Encavezado -->
+    <table>
+        <tr class="encavezado">
+            <td class="logo-principal">
+                <img src="~/assets/img/logos/Icon Kerigma Music.png" alt="Alternate Text" width="100" />
+            </td>
+            <td class="membretado">
+                <h1>Ficha Alumno/a Kerigma Music</h1>
+                <p>Credencial Oficial De Alumno/a</p>
+                <p>Telefono: 0000-0000</p>
+                <p>Correo Electronico: kerigmamusic@gmail.com</p>
+            </td>
+            <td>
+                <!-- Fotografía -->
+                @if (Model.ImageData != null)
+                {
+                    <img src="data:image/png;base64,@Convert.ToBase64String(Model.ImageData!)" alt="Fotografía" class="fotografia" width="100" />
+                }
+            </td>
+        </tr>
+    </table>
+    <br />
+    <!-- Informacion personal-->
+    <div class="sub-encavezado-1">
+        <h3><strong>Información Personal</strong></h3>
+    </div>
+    <br />
+    <div class="content">
+        <p class="codigo-de-estudiante"><strong>Codigo de Estudiante:</strong> @Model.StudentCode</p>
+        <p class="codigo-de-proyecto"><strong>Codigo de Proyecto:</strong> @(Model.ProjectCode != "" ? Model.ProjectCode : "No aplica")</p>
+        <p class="codigo-de-participante"><strong>Codigo de Participante:</strong> @(Model.ParticipantCode != "" ? Model.ParticipantCode : "No aplica")</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="nombre"><strong>Nombre:</strong> @Model.Name</p>
+        <p class="apellido"><strong>Apellido:</strong> @Model.LastName</p>
+        <p class="fehca-de-nacimiento"><strong>Fecha de Nacimiento:</strong> @Model.DateOfBirthFormatted</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="edad"><strong>Edad:</strong> @Model.Age Años</p>
+        <p class="genero"><strong>Genero:</strong> @Model.Gender</p>
+        <p class="estado"><strong>Estado:</strong> @(Model.Status == 1 ? "ACTIVO" : "INACTIVO")</p>
+        <p class="correo-personal"><strong>Correo Personal:</strong> @Model.PersonalEmail</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="nombre-de-iglesia"><strong>Nombre de la Iglesia:</strong> @(Model.ChurchName != null ? Model.ChurchName : "No aplica")</p>
+    </div>
+    <br />
+    <br />
+    <!-- Informacion personal-->
+    <div class="sub-encavezado-1">
+        <h3><strong>Información del Representante</strong></h3>
+    </div>
+    <br />
+    <div class="content">
+        <p class="nombre-del-representante"><strong>Nombre del Representante:</strong> @(Model.RepresentativeName != null ? Model.RepresentativeName : "Vacío")</p>
+        <p class="apellido-del-representante"><strong>Apellido del Representante:</strong> @(Model.RepresentativeLastName != null ? Model.RepresentativeLastName : "Vacío")</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="parentesco"><strong>Parentesco:</strong> @(Model.Relationship != null ? Model.Relationship : "Vacío")</p>
+        <p class="telefono-del-representante"><strong>Telefono del Representante:</strong> @(Model.TelephoneResponsible != null ? Model.TelephoneResponsible : "Vacío")</p>
+    </div>
+    <br />
+    <br />
+    <!-- Informacion personal-->
+    <div class="sub-encavezado-1">
+        <h3><strong>Información Adicional</strong></h3>
+    </div>
+    <br />
+    <div class="content">
+        <p class="comentarios-u-observaciones"><strong>Comentarios u Observaciones:</strong> @(Model.CommentsOrObservations != null ? Model.CommentsOrObservations : "Vacío")</p>
+    </div>
+    <br />
+    <div class="content">
+        <p class="fechacreacion"><strong>Fecha de Creación:</strong> @Model.DateCreatedFormatted - @Model.TimeCreatedFormatted</p>
+        <p class="fechamodificacion"><strong>Fecha de Modificación:</strong> @Model.DateModificationFormatted - @Model.TimeModificationFormatted</p>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <!-- Pie de pagina-->
+    <footer class="footer">Ficha Estudiante Academia Kerigma Music <span id="currentYear"></span> © | Generado en Sistema de Control Administrativo Kerigma Music.</footer>
+
+    <script>
+        // Obtiene el año actual y lo inserta en el elemento con id "currentYear"
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
