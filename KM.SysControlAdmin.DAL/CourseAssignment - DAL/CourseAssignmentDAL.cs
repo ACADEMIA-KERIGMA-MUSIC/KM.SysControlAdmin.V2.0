@@ -189,5 +189,54 @@ namespace KM.SysControlAdmin.DAL.CourseAssignment___DAL
             return courseAssignments;
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        public static async Task<int> UpdateAsync(CourseAssignment courseAssignment)
+        {
+            if (courseAssignment == null)
+            {
+                throw new ArgumentNullException(nameof(courseAssignment), "La asignación no puede ser nula.");
+            }
+
+            int result = 0;
+
+            using (var dbContext = new ContextDB())
+            {
+                var courseAssignmentDB = await dbContext.CourseAssignment.FirstOrDefaultAsync(c => c.Id == courseAssignment.Id);
+                if (courseAssignmentDB == null)
+                {
+                    throw new Exception("Asignación no encontrada para actualizar.");
+                }
+
+                // Validar si ya existe la asignación
+                if (await ExistCourseAssignment(courseAssignment, dbContext))
+                {
+                    throw new Exception("Asignación ya existente, vuelve a intentarlo nuevamente.");
+                }
+
+                // Validar si el estudiante está activo
+                if (!await IsStudentActive(courseAssignment.IdStudent, dbContext))
+                {
+                    throw new Exception("No se puede modificar la asignación ya que el Alumno/a no está activo.");
+                }
+
+                // Validar si el curso está activo
+                if (!await IsCourseActive(courseAssignment.IdCourse, dbContext))
+                {
+                    throw new Exception("No se puede modificar la asignación ya que el Curso no está activo.");
+                }
+
+                // Actualizar la asignación en la base de datos
+                courseAssignmentDB.IdStudent = courseAssignment.IdStudent;
+                courseAssignmentDB.IdCourse = courseAssignment.IdCourse;
+                courseAssignmentDB.DateModification = courseAssignment.DateModification;
+
+                dbContext.Update(courseAssignmentDB);
+                result = await dbContext.SaveChangesAsync();
+            }
+
+            return result;
+        }
+        #endregion
     }
 }

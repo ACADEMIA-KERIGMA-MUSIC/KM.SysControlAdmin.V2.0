@@ -128,5 +128,55 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
             return View(courseAssignments);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR
+        // Acción que muestra la vista de modificar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> EditCourseAssignment(int id)
+        {
+            try
+            {
+                CourseAssignment courseAssignment = await courseAssignmentBL.GetByIdAsync(new CourseAssignment { Id = id });
+                if (courseAssignment == null)
+                {
+                    return NotFound();
+                }
+                ViewBag.Student = await studentBL.GetAllAsync();
+                ViewBag.Course = await courseBL.GetAllAsync();
+                return View(courseAssignment);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // Acción que recibe los datos del formulario para ser enviados a la base de datos
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCourseAssignment(int id, CourseAssignment courseAssignment)
+        {
+            try
+            {
+                if (id != courseAssignment.Id)
+                {
+                    return BadRequest();
+                }
+                courseAssignment.DateModification = DateTime.Now.GetFechaZonaHoraria();
+                int result = await courseAssignmentBL.UpdateAsync(courseAssignment);
+                TempData["SuccessMessageUpdate"] = "Asingacion Modificada Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.Student = await studentBL.GetAllAsync();
+                ViewBag.Course = await courseBL.GetAllAsync();
+                return View(courseAssignment);
+            }
+        }
+        #endregion
     }
 }
