@@ -22,5 +22,36 @@ namespace KM.SysControlAdmin.BL.CourseAssignment___BL
             return await CourseAssignmentDAL.CreateAsync(courseAssignment);
         }
         #endregion
+
+        #region METODO PARA MOSTRAR
+        // Metodo Para Mostrar Una Lista De Registros
+        public async Task<List<CourseAssignment>> GetAllAsync()
+        {
+            return await CourseAssignmentDAL.GetAllAsync();
+        }
+        #endregion
+
+        #region METODO PARA MOSTRAR POR ID
+        // Metodo Para Mostrar Un Registro Especifico Bajo Un Id
+        public async Task<CourseAssignment> GetByIdAsync(CourseAssignment courseAssignment)
+        {
+            return await CourseAssignmentDAL.GetByIdAsync(courseAssignment);
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo Para Buscar Registros Existentes
+        public async Task<List<CourseAssignment>> SearchAsync(CourseAssignment courseAssignment)
+        {
+            return await CourseAssignmentDAL.SearchAsync(courseAssignment);
+        }
+        #endregion
+
+        #region METODO PARA INCLUIR PRIVILEGIO Y PRIVILEGIO
+        public async Task<List<CourseAssignment>> SearchIncludeAsync(CourseAssignment courseAssignment)
+        {
+            return await CourseAssignmentDAL.SearchIncludeAsync(courseAssignment);
+        }
+        #endregion
     }
 }

@@ -109,5 +109,85 @@ namespace KM.SysControlAdmin.DAL.CourseAssignment___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA MOSTRAR
+        // Metodo Para Mostrar La Lista De Registros
+        public static async Task<List<CourseAssignment>> GetAllAsync()
+        {
+            var courseAssignments = new List<CourseAssignment>();
+            using (var dbContext = new ContextDB())
+            {
+                courseAssignments = await dbContext.CourseAssignment.ToListAsync();
+            }
+            return courseAssignments;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID
+        // Metodo Para Mostrar Un Registro En Base A Su Id
+        public static async Task<CourseAssignment> GetByIdAsync(CourseAssignment courseAssignment)
+        {
+            var courseAssignmentDB = new CourseAssignment();
+            using (var dbContext = new ContextDB())
+            {
+                courseAssignmentDB = await dbContext.CourseAssignment.FirstOrDefaultAsync(c => c.Id == courseAssignment.Id);
+            }
+            return courseAssignmentDB!;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR REGISTROS MEDIANTE EL USO DE FILTROS
+        // Metodo Para Buscar Por Filtros
+        // IQueryable es una interfaz que toma un coleccion a la cual se le pueden implementar multiples consultas (Filtros)
+        internal static IQueryable<CourseAssignment> QuerySelect(IQueryable<CourseAssignment> query, CourseAssignment courseAssignment)
+        {
+            // Por ID
+            if (courseAssignment.Id > 0)
+                query = query.Where(c => c.Id == courseAssignment.Id);
+
+            // Por Estudiante
+            if (courseAssignment.IdStudent > 0)
+                query = query.Where(c => c.IdStudent == courseAssignment.IdStudent);
+
+            // Por Curso
+            if (courseAssignment.IdCourse > 0)
+                query = query.Where(c => c.IdCourse == courseAssignment.IdCourse);
+
+            // Ordenamos de Manera Desendente
+            query = query.OrderByDescending(c => c.Id).AsQueryable();
+
+            return query;
+        }
+        #endregion
+
+        #region METODO PARA BUSCAR
+        // Metodo para Buscar Registros Existentes
+        public static async Task<List<CourseAssignment>> SearchAsync(CourseAssignment courseAssignment)
+        {
+            var courseAssignments = new List<CourseAssignment>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.CourseAssignment.AsQueryable();
+                select = QuerySelect(select, courseAssignment);
+                courseAssignments = await select.ToListAsync();
+            }
+            return courseAssignments;
+        }
+        #endregion
+
+        #region METODO PARA INCLUIR MEMBRESIA Y PRIVILEGIOS
+        // Método que incluye el membresia y el privilegio para la búsqueda
+        public static async Task<List<CourseAssignment>> SearchIncludeAsync(CourseAssignment courseAssignment)
+        {
+            var courseAssignments = new List<CourseAssignment>();
+            using (var dbContext = new ContextDB())
+            {
+                var select = dbContext.CourseAssignment.AsQueryable();
+                select = QuerySelect(select, courseAssignment).Include(c => c.Student).Include(c => c.Course).AsQueryable();
+                courseAssignments = await select.ToListAsync();
+            }
+            return courseAssignments;
+        }
+        #endregion
     }
 }

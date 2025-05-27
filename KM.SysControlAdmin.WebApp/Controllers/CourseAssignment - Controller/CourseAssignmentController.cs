@@ -110,5 +110,23 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
             }
         }
         #endregion
+
+        #region METODO PARA MOSTRAR INDEX
+        // Accion Para Mostrar La Vista Index
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> Index(CourseAssignment courseAssignment = null!)
+        {
+            if (courseAssignment == null)
+                courseAssignment = new CourseAssignment();
+
+            var courseAssignments = await courseAssignmentBL.SearchIncludeAsync(courseAssignment);
+            var student = await studentBL.GetAllAsync();
+            var course = await courseBL.GetAllAsync();
+
+            ViewBag.Students = student;
+            ViewBag.Courses = course;
+            return View(courseAssignments);
+        }
+        #endregion
     }
 }
