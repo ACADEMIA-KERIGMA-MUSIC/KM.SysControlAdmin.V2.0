@@ -4,7 +4,9 @@ using KM.SysControlAdmin.BL.Course___BL;
 using KM.SysControlAdmin.BL.CourseAssignment___BL;
 using KM.SysControlAdmin.BL.Student___BL;
 using KM.SysControlAdmin.Core.Utils;
+using KM.SysControlAdmin.EN.Course___EN;
 using KM.SysControlAdmin.EN.CourseAssignment___EN;
+using KM.SysControlAdmin.EN.Student___EN;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -175,6 +177,39 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
                 ViewBag.Student = await studentBL.GetAllAsync();
                 ViewBag.Course = await courseBL.GetAllAsync();
                 return View(courseAssignment);
+            }
+        }
+        #endregion
+
+        #region METODO PARA MOSTRAR DETALLES
+        // Acción Que Muestra El Detalle De Un Registro
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> DetailsCourseAssignment(int id)
+        {
+            try
+            {
+                // Obtiene el curso por su ID incluyendo las entidades relacionadas Trainer y Schedule
+                var courseAssignment = await courseAssignmentBL.GetByIdAsync(new CourseAssignment { Id = id });
+                if (courseAssignment == null)
+                {
+                    return NotFound();
+                }
+
+                // Obtén las entidades relacionadas Membership y Privilege
+                courseAssignment.Student = await studentBL.GetByIdAsync(new Student { Id = courseAssignment.IdStudent });
+                courseAssignment.Course = await courseBL.GetByIdAsync(new Course { Id = courseAssignment.IdCourse });
+
+                // Comprueba si las entidades relacionadas existen
+                if (courseAssignment.Student == null || courseAssignment.Course == null)
+                {
+                    return NotFound();
+                }
+                return View(courseAssignment); // Retorna los detalles a la vista
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); // Devuelve la vista sin ningún objeto Course
             }
         }
         #endregion
