@@ -213,5 +213,62 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
             }
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Accion Que Muestra La Vista De Eliminar
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        public async Task<IActionResult> DeleteCourseAssignment(int id)
+        {
+            try
+            {
+                CourseAssignment courseAssignment = await courseAssignmentBL.GetByIdAsync(new CourseAssignment { Id = id });
+                if (courseAssignment == null)
+                {
+                    return NotFound();
+                }
+                // Obtén las entidades relacionadas Membership y Privilege
+                courseAssignment.Student = await studentBL.GetByIdAsync(new Student { Id = courseAssignment.IdStudent });
+                courseAssignment.Course = await courseBL.GetByIdAsync(new Course { Id = courseAssignment.IdCourse });
+
+                // Comprueba si las entidades relacionadas existen
+                if (courseAssignment.Student == null || courseAssignment.Course == null)
+                {
+                    return NotFound();
+                }
+                return View(courseAssignment); // Retorna los detalles a la vista
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // Accion Que Recibe Los Datos Del Formulario Para Ser Enviados a La BD
+        [Authorize(Roles = "Desarrollador, Administrador, Secretario/a")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCourseAssignment(int id, CourseAssignment courseAssignment)
+        {
+            try
+            {
+                CourseAssignment courseAssignmentDB = await courseAssignmentBL.GetByIdAsync(courseAssignment);
+                int result = await courseAssignmentBL.DeleteAsync(courseAssignmentDB);
+                TempData["SuccessMessageDelete"] = "Asingacion Eliminada Exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                var courseAssignmentDB = await courseAssignmentBL.GetByIdAsync(courseAssignment);
+                if (courseAssignmentDB == null)
+                    courseAssignmentDB = new CourseAssignment();
+                if (courseAssignmentDB.Id > 0)
+                    courseAssignmentDB.Student = await studentBL.GetByIdAsync(new Student { Id = courseAssignmentDB.IdStudent });
+                courseAssignmentDB.Course = await courseBL.GetByIdAsync(new Course { Id = courseAssignmentDB.IdCourse });
+                return View(courseAssignmentDB);
+            }
+        }
+        #endregion
     }
 }

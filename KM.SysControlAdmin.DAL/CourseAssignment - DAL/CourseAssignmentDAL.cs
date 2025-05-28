@@ -238,5 +238,24 @@ namespace KM.SysControlAdmin.DAL.CourseAssignment___DAL
             return result;
         }
         #endregion
+
+        #region METODO PARA ELIMINAR
+        // Metodo Para Eliminar Un Registro Existente En La Base De Datos
+        public static async Task<int> DeleteAsync(CourseAssignment courseAssignment)
+        {
+            int result = 0;
+            // Un bloque de conexion que mientras se permanezca en el bloque la base de datos permanecera abierta y al terminar se destruira
+            using (var dbContext = new ContextDB())
+            {
+                var courseAssignmentDB = await dbContext.CourseAssignment.FirstOrDefaultAsync(c => c.Id == courseAssignment.Id);
+                if (courseAssignmentDB != null)
+                {
+                    dbContext.CourseAssignment.Remove(courseAssignmentDB);
+                    result = await dbContext.SaveChangesAsync();
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }
