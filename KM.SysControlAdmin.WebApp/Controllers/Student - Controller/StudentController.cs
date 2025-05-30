@@ -76,6 +76,7 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Student___Controller
                     DateModification = student.DateModification,
                     ImageData = student.ImageData,
                     RecoveryEmail = student.PersonalEmail,
+                    CodeUser = student.StudentCode,
                 };
 
                 // Guardar en la tabla User
@@ -148,6 +149,7 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Student___Controller
                     DateModification = student.DateModification,
                     ImageData = student.ImageData,
                     RecoveryEmail = student.PersonalEmail,
+                    CodeUser = student.StudentCode,
                 };
 
                 if (student.ChurchName != "")

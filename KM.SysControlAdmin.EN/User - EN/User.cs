@@ -66,10 +66,10 @@ namespace KM.SysControlAdmin.EN.User___EN
         [Display(Name = "Correo De Recuperacion")]
         public string RecoveryEmail { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "El Codigo es requerido")]
+        [Required(ErrorMessage = "El Codigo de Usuario es requerido")]
         [MaxLength(20, ErrorMessage = "Máximo 20 caracteres")]
-        [Display(Name = "Codigo")]
-        public string Code { get; set; } = string.Empty;
+        [Display(Name = "Codigo de Usuario")]
+        public string CodeUser { get; set; } = string.Empty;
         #endregion
 
         #region ATRIBUTOS NO MAPEABLES

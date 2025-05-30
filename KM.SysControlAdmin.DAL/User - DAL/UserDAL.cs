@@ -223,6 +223,7 @@ namespace KM.SysControlAdmin.DAL.User___DAL
                 userDb.ImageData = user.ImageData;
                 userDb.IdRole = user.IdRole;
                 userDb.RecoveryEmail = user.RecoveryEmail;
+                userDb.CodeUser = user.CodeUser;
 
                 dbContext.User.Update(userDb);
                 result = await dbContext.SaveChangesAsync();
