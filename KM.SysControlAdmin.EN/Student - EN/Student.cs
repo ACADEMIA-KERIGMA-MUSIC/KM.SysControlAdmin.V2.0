@@ -164,6 +164,7 @@ namespace KM.SysControlAdmin.EN.Student___EN
         [Display(Name = "Correo De Recuperacion")]
         public string RecoveryEmail { get; set; } = string.Empty;
 
+        [NotMapped]
         [Required(ErrorMessage = "El Codigo de Usuario es requerido")]
         [MaxLength(20, ErrorMessage = "Máximo 20 caracteres")]
         [Display(Name = "Codigo de Usuario")]
