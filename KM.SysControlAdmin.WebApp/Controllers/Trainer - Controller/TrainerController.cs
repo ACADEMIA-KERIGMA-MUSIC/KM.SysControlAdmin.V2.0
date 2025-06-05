@@ -3,6 +3,7 @@
 using KM.SysControlAdmin.BL.Trainer___BL;
 using KM.SysControlAdmin.BL.User___BL;
 using KM.SysControlAdmin.Core.Utils;
+using KM.SysControlAdmin.EN.Course___EN;
 using KM.SysControlAdmin.EN.Trainer___EN;
 using KM.SysControlAdmin.EN.User___EN;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,7 +16,7 @@ using Rotativa.AspNetCore;
 
 namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
 {
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Desarrollador, Administrador, Secretario/a")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Desarrollador, Administrador, Secretario/a, Instructor")]
     public class TrainerController : Controller
     {
         // Creamos Una Instancia Para Acceder a Los Metodos
@@ -266,6 +267,39 @@ namespace KM.SysControlAdmin.WebApp.Controllers.Trainer___Controller
             {
                 FileName = fileName
             };
+        }
+        #endregion
+
+        #region METODO PARA OBTENER CURSOS ASIGNADOS SEGUN INSTRUCTOR
+        // Metodo Para Mostrar Vista De Cursos Asignados Al Instructor Logiado
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> MyAssignedCourses()
+        {
+            try
+            {
+                // Buscar usuario logueado por email
+                var users = await userBL.SearchIncludeRoleAsync(new User { Email = User.Identity!.Name! });
+                var actualUser = users.FirstOrDefault();
+
+                if (actualUser == null)
+                {
+                    ViewBag.Error = "No se encontró el usuario logueado.";
+                    return View(new List<Course>());
+                }
+
+                // Obtener el código del trainer desde el usuario logueado
+                string trainerCode = actualUser.CodeUser;
+
+                // Obtener los cursos desde la BL
+                var cursos = await trainerBL.GetCoursesByTrainerCodeAsync(trainerCode);
+
+                return View(cursos);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al cargar los cursos: " + ex.Message;
+                return View(new List<Course>());
+            }
         }
         #endregion
     }

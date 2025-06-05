@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 // Referencias Necesarias Para El Correcto Funcionamiento
 using KM.SysControlAdmin.DAL.Trainer___DAL;
+using KM.SysControlAdmin.EN.Course___EN;
 using KM.SysControlAdmin.EN.Trainer___EN;
 
 #endregion
@@ -59,6 +60,14 @@ namespace KM.SysControlAdmin.BL.Trainer___BL
         public async Task<int> DeleteAsync(Trainer trainer)
         {
             return await TrainerDAL.DeleteAsync(trainer);
+        }
+        #endregion
+
+        #region METODO PARA OBTENER CURSOS ASIGNADOS SEGUN INSTRUCTOR
+        // Metodo para obtener los cursos asignados segun el instructor
+        public async Task<List<Course>> GetCoursesByTrainerCodeAsync(string trainerCode)
+        {
+            return await TrainerDAL.GetCoursesByTrainerCodeAsync(trainerCode);
         }
         #endregion
     }

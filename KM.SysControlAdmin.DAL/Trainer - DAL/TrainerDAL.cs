@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KM.SysControlAdmin.EN.Course___EN;
+
 // Referencias Necesarias Para El Correcto Funcionamiento
 using KM.SysControlAdmin.EN.Trainer___EN;
 using Microsoft.EntityFrameworkCore;
@@ -179,6 +181,28 @@ namespace KM.SysControlAdmin.DAL.Trainer___DAL
                 }
             }
             return result;  // Si se realizo con exito devuelve 1 sino devuelve 0
+        }
+        #endregion
+
+        #region METODO PARA OBTENER CURSOS ASIGNADOS SEGUN INSTRUCTOR
+        // Metodo para obtener los cursos asignados segun el instructor
+        public static async Task<List<Course>> GetCoursesByTrainerCodeAsync(string trainerCode)
+        {
+            var courses = new List<Course>();
+            using (var dbContext = new ContextDB())
+            {
+                // Buscar al trainer por su código
+                var trainer = await dbContext.Trainer.FirstOrDefaultAsync(t => t.Code == trainerCode);
+
+                if (trainer == null)
+                    return courses; // No se encontró el trainer
+
+                // Buscar cursos asignados directamente a ese trainer
+                courses = await dbContext.Course
+                    .Where(c => c.IdTrainer == trainer.Id)
+                    .ToListAsync();
+            }
+            return courses;
         }
         #endregion
     }
