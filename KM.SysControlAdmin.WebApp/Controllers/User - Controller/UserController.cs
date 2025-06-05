@@ -358,6 +358,11 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
                 {
                     ViewBag.ImageUrl = Convert.ToBase64String(actualUser.ImageData);
                 }
+                // Si hay mensaje en TempData, pásalo a ViewBag
+                if (TempData["SuccessMessageUpdate"] != null)
+                {
+                    ViewBag.AlertMessage = TempData["SuccessMessageUpdate"];
+                }
                 return View(actualUser);
             }
             catch (Exception ex)
@@ -499,6 +504,55 @@ namespace KM.SysControlAdmin.WebApp.Controllers.User___Controller
                 TempData["ToastMessage"] = "Usuario no encontrado";
                 TempData["ToastType"] = "error";
                 return RedirectToAction("ForgotPassword");
+            }
+        }
+        #endregion
+
+        #region METODO PARA MODIFICAR INFORMACION ESPECIFICA DEL USUARIO LOGIADO
+        // Muestra La Vista De Informacion Especifica a Modificar
+        [Authorize(Roles = "Instructor, Alumno/a, Invitado")]
+        public async Task<IActionResult> UpdateInfoUser()
+        {
+            try
+            {
+                var users = await userBL.SearchIncludeRoleAsync(new User { Email = User.Identity!.Name! });
+                var actualUser = users.FirstOrDefault();
+
+                // Validar existencia
+                if (actualUser == null)
+                    throw new Exception("No se encontró información del usuario logueado.");
+
+                return View(actualUser);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // Método para actualizar únicamente la fotografía del usuario logueado
+        [Authorize(Roles = "Instructor, Alumno/a, Invitado")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateInfoUser(int id, User user, IFormFile imagen)
+        {
+            try
+            {
+                // Verificar que el id coincida con el usuario que se está modificando
+                if (id != user.Id)
+                {
+                    return BadRequest();
+                }
+
+                int result = await userBL.UpdateInfoAsync(user);
+                TempData["SuccessMessageUpdate"] = "Usuario Modificado Exitosamente";
+                return RedirectToAction("Information");
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return View(user);
             }
         }
         #endregion

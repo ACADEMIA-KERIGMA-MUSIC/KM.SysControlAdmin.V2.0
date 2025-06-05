@@ -373,5 +373,29 @@ namespace KM.SysControlAdmin.DAL.User___DAL
             }
         }
         #endregion
+
+        #region METODO PARA MODIFICAR INFORMACION ESPECIFICA DEL USUARIO LOGIADO
+        // Metodo Para Modificar Informacion Especifica Del Usuario Logiado
+        public static async Task<int> UpdateInfoAsync(User user)
+        {
+            int result = 0;
+            using (var dbContext = new ContextDB())
+            {
+                var userDb = await dbContext.User.FirstOrDefaultAsync(u =>u.Id == user.Id);
+                if (userDb == null)
+                {
+                    throw new Exception("Usuario no encontrado");
+                }
+
+                userDb.Name = user.Name;
+                userDb.LastName = user.LastName;
+                userDb.RecoveryEmail = user.RecoveryEmail;
+
+                dbContext.User.Update(userDb);
+                result = await dbContext.SaveChangesAsync();
+            }
+            return result;
+        }
+        #endregion
     }
 }

@@ -118,5 +118,13 @@ namespace KM.SysControlAdmin.BL.User___BL
             return await UserDAL.SetTemporaryPasswordAsync(email);
         }
         #endregion
+
+        #region METODO PARA MODIFICAR INFORMACION ESPECIFICA DEL USUARIO LOGIADO
+        // Metodo Para Modificar Informacion Especifica Del Usuario Logiado
+        public async Task<int> UpdateInfoAsync(User user)
+        {
+            return await UserDAL.UpdateInfoAsync(user);
+        }
+        #endregion
     }
 }
