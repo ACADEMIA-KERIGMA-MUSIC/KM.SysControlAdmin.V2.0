@@ -1,0 +1,38 @@
+﻿@model List<KM.SysControlAdmin.EN.CourseAssignment___EN.CourseAssignment>
+
+<div class="modal-header">
+    <h5 class="modal-title" style="text-align:center">Alumnos Asignados al Curso</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    @if (Model.Any())
+    {
+        <table class="table table-bordered table-striped" style="text-align:center">
+            <thead>
+                <tr>
+                    <th>Codigo de Estudiante</th>
+                    <th>Codigo de Proyecto</th>
+                    <th>Codigo de Participante</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var assignment in Model)
+                {
+                    <tr>
+                        <td>@assignment.Student!.StudentCode</td>
+                        <td>@(string.IsNullOrWhiteSpace(assignment.Student.ProjectCode) ? "NO APLICA" : assignment.Student.ProjectCode)</td>
+                        <td>@(string.IsNullOrWhiteSpace(assignment.Student.ParticipantCode) ? "NO APLICA" : assignment.Student.ParticipantCode)</td>
+                        <td>@assignment.Student.Name</td>
+                        <td>@assignment.Student.LastName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay alumnos asignados a este curso.</p>
+    }
+</div>

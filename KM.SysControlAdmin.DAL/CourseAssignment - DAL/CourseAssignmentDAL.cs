@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 // Referencias Necesarias Para El Correcto Funcionamiento
 using KM.SysControlAdmin.EN.CourseAssignment___EN;
+using KM.SysControlAdmin.EN.User___EN;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -255,6 +256,20 @@ namespace KM.SysControlAdmin.DAL.CourseAssignment___DAL
                 }
             }
             return result;
+        }
+        #endregion
+
+        #region METODO PARA MOSTRAR LA LISTA DE ALUMNOS SEGUN ASIGNACION (DESDE ROL INSTRUCTOR)
+        // Metodo Para Obtener La Lista De Alumnos Asignados Segun Curso Desde Rol Instructor
+        public static async Task<List<CourseAssignment>> GetAssignmentsByCourseIdAsync(int courseId)
+        {
+            using (var dbContext = new ContextDB())
+            {
+                return await dbContext.CourseAssignment
+                    .Where(a => a.IdCourse == courseId)
+                    .Include(a => a.Student) // <-- solo si quieres acceder al estudiante
+                    .ToListAsync();
+            }
         }
         #endregion
     }

@@ -69,5 +69,13 @@ namespace KM.SysControlAdmin.BL.CourseAssignment___BL
             return await CourseAssignmentDAL.DeleteAsync(courseAssignment);
         }
         #endregion
+
+        #region METODO PARA MOSTRAR LA LISTA DE ALUMNOS SEGUN ASIGNACION (DESDE ROL INSTRUCTOR)
+        // Metodo Para Obtener La Lista De Alumnos Asignados Segun Curso Desde Rol Instructor
+        public async Task<List<CourseAssignment>> GetAssignmentsByCourseIdAsync(int courseId)
+        {
+            return await CourseAssignmentDAL.GetAssignmentsByCourseIdAsync(courseId);
+        }
+        #endregion
     }
 }

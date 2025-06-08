@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
 {
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Desarrollador, Administrador, Secretario/a")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Desarrollador, Administrador, Secretario/a, Instructor")]
     public class CourseAssignmentController : Controller
     {
         // Creamos las instancias para acceder a los metodos
@@ -268,6 +268,16 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
                 courseAssignmentDB.Course = await courseBL.GetByIdAsync(new Course { Id = courseAssignmentDB.IdCourse });
                 return View(courseAssignmentDB);
             }
+        }
+        #endregion
+
+        #region METODO PARA MOSTRAR LA LISTA DE ALUMNOS SEGUN ASIGNACION (DESDE ROL INSTRUCTOR)
+        // Accion Que Muestra La Vista De Alumnos Asignados Por Curso
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> StudentsAccordingToCourse(int id)
+        {
+            var assignments = await courseAssignmentBL.GetAssignmentsByCourseIdAsync(id);
+            return PartialView("_StudentListModal", assignments);
         }
         #endregion
     }
