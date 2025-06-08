@@ -51,7 +51,9 @@ else
                             item.Status == 2 ? "INACTIVO" : "")
                     </td>
                     <td>
-                        <a asp-action="" asp-route-id="@item.Id" class="btn btn-outline-info m-1" title="Lista de Alumno">
+                        <!-- Botón que abre el modal con la lista de alumnos -->
+                        <a href="@Url.Action("StudentsAccordingToCourse", "CourseAssignment", new { id = item.Id })"
+                           class="btn btn-outline-info m-1 view-students" title="Lista de Alumnos">
                             Alumnos Del Curso
                         </a>
                     </td>
@@ -61,9 +63,18 @@ else
     </table>
 }
 
+<!-- Modal para mostrar la lista de alumnos -->
+<div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="modalContent">
+            <!-- Aquí se cargará la vista parcial -->
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-        // Tabla con DataTable
+        // Inicialización de DataTable para la tabla de cursos
         new DataTable('#CoursesTable', {
             info: false,
             order: false,
@@ -77,6 +88,19 @@ else
                 zeroRecords: 'No se encontraron cursos.',
                 processing: 'Procesando...',
             }
+        });
+
+        // Script para cargar la vista parcial en el modal y mostrarlo
+        $(document).on("click", ".view-students", function (e) {
+            e.preventDefault();
+
+            var url = $(this).attr("href");
+
+            // Carga la vista parcial dentro del modalContent
+            $("#modalContent").load(url, function () {
+                // Cuando termine la carga, muestra el modal
+                $("#studentModal").modal("show");
+            });
         });
     </script>
 }
