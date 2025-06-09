@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KM.SysControlAdmin.EN.Course___EN;
+
 // Referencias Necesarias Para El Correcto Funcionamiento
 using KM.SysControlAdmin.EN.Student___EN;
 using Microsoft.EntityFrameworkCore;
@@ -231,6 +233,30 @@ namespace KM.SysControlAdmin.DAL.Student___DAL
                 }
             }
             return result;  // Si se realizo con exito devuelve 1 sino devuelve 0
+        }
+        #endregion
+
+        #region METODO PARA OBTENER CURSOS ASIGNADOS A UN ESTUDIANTE
+        // Metodo para obtener los cursos a los que está inscrito un estudiante
+        public static async Task<List<Course>> GetCoursesByStudentCodeAsync(string studentCode)
+        {
+            var courses = new List<Course>();
+            using (var dbContext = new ContextDB())
+            {
+                // Buscar al estudiante por su código
+                var student = await dbContext.Student.FirstOrDefaultAsync(s => s.StudentCode == studentCode);
+
+                if (student == null)
+                    return courses; // No se encontró el estudiante
+
+                // Buscar cursos donde esté asignado ese estudiante
+                courses = await dbContext.CourseAssignment
+                    .Where(ca => ca.IdStudent == student.Id)
+                    .Include(ca => ca.Course) // Incluye los datos del curso
+                    .Select(ca => ca.Course!) // Solo retorna el curso
+                    .ToListAsync();
+            }
+            return courses;
         }
         #endregion
     }

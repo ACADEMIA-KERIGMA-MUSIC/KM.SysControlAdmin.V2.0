@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 // Referencias Necesarias Para El Correcto Funcionamiento
 using KM.SysControlAdmin.DAL.Student___DAL;
+using KM.SysControlAdmin.EN.Course___EN;
 using KM.SysControlAdmin.EN.Student___EN;
 
 
@@ -78,6 +79,14 @@ namespace KM.SysControlAdmin.BL.Student___BL
         public async Task<int> DeleteAsync(Student student)
         {
             return await StudentDAL.DeleteAsync(student);
+        }
+        #endregion
+
+        #region METODO PARA OBTENER CURSOS ASIGNADOS SEGUN ESTUDIANTE
+        // Metodo para obtener los cursos a los que está inscrito un estudiante
+        public async Task<List<Course>> GetCoursesByStudentCodeAsync(string studentCode)
+        {
+            return await StudentDAL.GetCoursesByStudentCodeAsync(studentCode);
         }
         #endregion
     }
