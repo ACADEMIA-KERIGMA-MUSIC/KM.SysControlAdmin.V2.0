@@ -8,7 +8,7 @@
     List<Schedule> schedules = ViewBag.Schedule as List<Schedule>;
 }
 
-<link href="/css/Course/DesignCreateAndEdit.css" rel="stylesheet" />
+<link href="~/css/Course/DesignCreateAndEdit.css" rel="stylesheet" />
 
 <br />
 <h1>Formulario - Crear Curso</h1>
@@ -75,7 +75,7 @@
                 <div class="form-group">
                     <label asp-for="IdSchedule" class="control-label"></label>
                     <select class="form-select" id="IdSchedule" name="IdSchedule">
-                        <option selected>SELECCIONAR</option>
+                        <option value="" selected>SELECCIONAR</option>
                         @foreach (var schedule in schedules!)
                         {
                             <option value="@schedule.Id">@schedule.StartTimeFormatted - @schedule.EndTimeFormatted</option>
@@ -86,7 +86,7 @@
                 <div class="form-group">
                     <label asp-for="IdTrainer" class="control-label"></label>
                     <select class="form-select" name="IdTrainer">
-                        <option selected>SELECCIONAR</option>
+                        <option value="" selected>SELECCIONAR</option>
                         @foreach (var item in trainers!)
                         {
                             <option value="@item.Id">@item.Name @item.LastName - @item.Code</option>

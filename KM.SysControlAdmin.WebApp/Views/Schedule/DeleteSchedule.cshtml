@@ -16,7 +16,7 @@
 
 <script>
     async function ShowDeletePrompt() {
-        const statusText = @Model.Status == 1 ? "Activo" : @Model.Status == 2 ? "Inactivo" : "Desconocido";
+        const statusText = @Model.Status == 1 ? "ACTIVO" : @Model.Status == 2 ? "INACTIVO" : "DESCONOCIDO";
 
         const result = await Swal.fire({
             title: 'Información Del Horario',

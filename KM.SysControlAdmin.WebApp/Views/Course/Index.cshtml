@@ -7,7 +7,7 @@
     List<Trainer> trainers = ViewBag.Trainers as List<Trainer>;
 }
 
-<link href="/css/Course/DesignCreateAndEdit.css" rel="stylesheet" />
+<link href="~/css/Course/DesignCreateAndEdit.css" rel="stylesheet" />
 
 <br />
 <h3>Mantenimiento De Cursos</h3>
@@ -28,7 +28,7 @@
                 <div class="form-group">
                     <label for="Status">Estado</label>
                     <select class="form-select" name="Status">
-                        <option selected>SELECCIONAR</option>
+                        <option value="" selected>SELECCIONAR</option>
                         <option value="1">ACTIVO</option>
                         <option value="2">INACTIVO</option>
                     </select>
@@ -87,8 +87,8 @@
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.MaxStudent) Máximo</td>
                 <td>
-                    @(item.Status == 1 ? "Activo" :
-                        item.Status == 2 ? "Inactivo" : "")
+                    @(item.Status == 1 ? "ACTIVO" :
+                        item.Status == 2 ? "INACTIVO" : "")
                 </td>
                 <td>
                     <a asp-action="EditCourse" asp-route-id="@item.Id" class="btn btn-warning m-1" title="Modificar Curso">

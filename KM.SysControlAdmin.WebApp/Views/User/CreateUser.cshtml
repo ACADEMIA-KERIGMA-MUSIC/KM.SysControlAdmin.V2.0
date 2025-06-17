@@ -6,7 +6,7 @@
     List<Role> roles = ViewBag.Roles as List<Role>;
 }
 
-<link href="/css/User/DesignCreateAndEdit.css" rel="stylesheet" />
+<link href="~/css/User/DesignCreateAndEdit.css" rel="stylesheet" />
 
 <br />
 <h1>Formulario Crear Usuario</h1>
@@ -55,9 +55,9 @@
                 <div class="form-group">
                     <label asp-for="Status" class="control-label"></label>
                     <select asp-for="Status" class="form-select">
-                        <option>Seleccionar</option>
-                        <option selected value="1">Activo</option>
-                        <option value="2">Inactivo</option>
+                        <option value="">SELECCIONAR</option>
+                        <option selected value="1">ACTIVO</option>
+                        <option value="2">INACTIVO</option>
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
@@ -69,7 +69,7 @@
                 <div class="form-group">
                     <label asp-for="IdRole" class="control-label"></label>
                     <select class="form-select" name="IdRole">
-                        <option selected>Seleccionar</option>
+                        <option value="" selected>SELECCIONAR</option>
                         @foreach (var item in roles!.Where(r => r.Id != 1)) // Excluir el rol con Id 1
                         {
                             <option value="@item.Id">@item.Name</option>

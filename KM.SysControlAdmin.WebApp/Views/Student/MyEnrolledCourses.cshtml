@@ -4,7 +4,7 @@
     ViewData["Title"] = "Mis Cursos Inscritos";
 }
 
-<link href="/css/Student/DesignCreateAndEdit.css" rel="stylesheet" />
+<link href="~/css/Student/DesignCreateAndEdit.css" rel="stylesheet" />
 
 <br />
 <h3>Mis Cursos Inscritos</h3>
@@ -31,9 +31,6 @@ else
                     @Html.DisplayNameFor(model => model.Name)
                     </th>
                     <th style="text-align:center;">
-                    @Html.DisplayNameFor(model => model.MaxStudent)
-                    </th>
-                    <th style="text-align:center;">
                     @Html.DisplayNameFor(model => model.Status)
                     </th>
                 </tr>
@@ -44,10 +41,9 @@ else
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.Code)</td>
                             <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                            <td>@Html.DisplayFor(modelItem => item.MaxStudent) Máximo</td>
                             <td>
                         @(item.Status == 1 ? "ACTIVO" :
-                              item.Status == 2 ? "INACTIVO" : "")
+                              item.Status == 2 ? "INACTIVO" : "DESCONOCIDO")
                             </td>
                         </tr>
             }
@@ -56,21 +52,21 @@ else
 }
 
 @section Scripts {
-        <script>
-            // Inicialización de DataTable para la tabla de cursos inscritos
-            new DataTable('#CoursesTable', {
-                info: false,
-                order: false,
-                responsive: true,
-                pagingType: 'simple_numbers',
-                language: {
-                    search: 'Busqueda Rápida:',
-                    searchPlaceholder: 'Buscar curso...',
-                    lengthMenu: '_MENU_ Mostrar',
-                    emptyTable: 'No estás inscrito en ningún curso.',
-                    zeroRecords: 'No se encontraron cursos.',
-                    processing: 'Procesando...',
-                }
-            });
-        </script>
+    <script>
+        // Inicialización de DataTable para la tabla de cursos inscritos
+        new DataTable('#CoursesTable', {
+            info: false,
+            order: false,
+            responsive: true,
+            pagingType: 'simple_numbers',
+            language: {
+                search: 'Busqueda Rápida:',
+                searchPlaceholder: 'Buscar curso...',
+                lengthMenu: '_MENU_ Mostrar',
+                emptyTable: 'No estás inscrito en ningún curso.',
+                zeroRecords: 'No se encontraron cursos.',
+                processing: 'Procesando...',
+            }
+        });
+    </script>
 }

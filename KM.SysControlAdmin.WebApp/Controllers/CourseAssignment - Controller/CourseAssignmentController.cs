@@ -73,7 +73,7 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
                 Trainer = course.IdTrainer != null
                     ? $"{course.Trainer.Name} {course.Trainer.LastName} - {course.Trainer.Code}"
                     : null,
-                Status = course.Status == 1 ? "Activo" : course.Status == 2 ? "Inactivo" : "Desconocido" // Lógica de validación
+                Status = course.Status == 1 ? "ACTIVO" : course.Status == 2 ? "INACTIVO" : "DESCONOCIDO" // Lógica de validación
             };
             return Json(courseDetails);
         }

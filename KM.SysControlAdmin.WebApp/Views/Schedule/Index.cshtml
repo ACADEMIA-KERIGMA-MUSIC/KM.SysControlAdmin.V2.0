@@ -73,15 +73,15 @@
                 </td>
                 @if (item.Status == 1)
                 {
-                    <td>Activo</td>
+                    <td>ACTIVO</td>
                 }
                 else if (item.Status == 2)
                 {
-                    <td>Inactivo</td>
+                    <td>INACTIVO</td>
                 }
                 else
                 {
-                    <td></td>
+                    <td>DESCONOCIDO</td>
                 }
                 <td>
                     @Html.DisplayFor(modelItem => item.DateCreatedFormatted)

@@ -8,7 +8,7 @@
     List<Course> courses = ViewBag.Course as List<Course>;
 }
 
-<link href="/css/CourseAssignment/DesignCreateAndEdit.css" rel="stylesheet" />
+<link href="~/css/CourseAssignment/DesignCreateAndEdit.css" rel="stylesheet" />
 
 <br />
 <h1>Formulario - Crear Asignación</h1>
@@ -25,7 +25,7 @@
                 <div class="form-group">
                     <label asp-for="IdStudent" class="control-label"></label>
                     <select class="select2 form-select" name="IdStudent" id="IdStudent">
-                        <option selected value="">Seleccionar</option>
+                        <option selected value="">SELECCIONAR</option>
                         @foreach (var item in students!)
                         {
                             <option value="@item.Id">@item.Name @item.LastName</option>
@@ -73,7 +73,7 @@
                 <div class="form-group">
                     <label asp-for="IdCourse" class="control-label"></label>
                     <select class="select2 form-select" name="IdCourse" id="IdCourse">
-                        <option selected value="">Seleccionar</option>
+                        <option selected value="">SELECCIONAR</option>
                         @foreach (var item in courses!)
                         {
                             <option value="@item.Id">@item.Name</option>

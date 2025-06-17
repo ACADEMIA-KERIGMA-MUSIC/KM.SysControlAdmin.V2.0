@@ -6,7 +6,7 @@
     List<Role> roles = ViewBag.Roles as List<Role>;
 }
 
-<link href="/css/User/DesignCreateAndEdit.css" rel="stylesheet" />
+<link href="~/css/User/DesignCreateAndEdit.css" rel="stylesheet" />
 
 <br />
 <h3>Listado De Usuarios</h3>
@@ -30,15 +30,15 @@
                 <div class="form-group">
                     <label class="control-label" for="Status">Estatus</label>
                     <select class="form-select" name="Status">
-                        <option value="0">Seleccionar</option>
-                        <option value="1">Activo</option>
-                        <option value="2">Inactivo</option>
+                        <option value="0">SELECCIONAR</option>
+                        <option value="1">ACTIVO</option>
+                        <option value="2">INACTIVO</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="control-label">Rol</label>
                     <select class="form-select" name="IdRole">
-                        <option selected>Seleccionar</option>
+                        <option value="" selected>SELECCIONAR</option>
                         @foreach (var item in roles!.Where(r => r.Id != 1)) // Excluir el rol con Id 1
                         {
                             <option value="@item.Id">@item.Name</option>
@@ -86,7 +86,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.LastName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@(item.Status == 1 ? "Activo" : "Inactivo")</td>
+                <td>@(item.Status == 1 ? "ACTIVO" : "INACTIVO")</td>
                 <td>@Html.DisplayFor(modelItem => item.Role!.Name)</td>
                 <td>
                     @Html.ActionLink("Modificar Contraseña", "ChangePasswordForUser", new { id = item.Id }, new { @class = "btn btn-warning m-1" })

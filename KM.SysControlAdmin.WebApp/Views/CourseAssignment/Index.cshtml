@@ -18,7 +18,7 @@
                 <div class="form-group">
                     <label class="form-group">Estudiante</label>
                     <select class="select2 form-select" name="IdStudent" id="IdStudent">
-                        <option selected value="">Seleccionar</option>
+                        <option selected value="">SELECCIONAR</option>
                         @foreach (var item in students!)
                         {
                             <option value="@item.Id">@item.Name @item.LastName - @item.StudentCode</option>
@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label class="form-group">Curso</label>
                     <select class="select2 form-select" name="IdCourse" id="IdCourse">
-                        <option selected value="">Seleccionar</option>
+                        <option selected value="">SELECCIONAR</option>
                         @foreach (var item in courses!)
                         {
                             <option value="@item.Id">@item.Name - @item.Code</option>
