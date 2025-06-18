@@ -18,17 +18,17 @@ namespace KM.SysControlAdmin.DAL.User___DAL
     {
         #region METODO PARA ENCRIPTAR
         // Metodo Para Encriptar Via MD5 El Password
-        private static void EncryptMD5(User user)
+        private static string EncryptMD5(string plainText)
         {
             using (var md5 = MD5.Create())
             {
-                var result = md5.ComputeHash(Encoding.ASCII.GetBytes(user.Password));
+                var result = md5.ComputeHash(Encoding.ASCII.GetBytes(plainText));
                 var encryptedStr = "";
                 for (int i = 0; i < result.Length; i++)
                 {
                     encryptedStr += result[i].ToString("x2").ToLower();
                 }
-                user.Password = encryptedStr;
+                return encryptedStr;
             }
         }
         #endregion
@@ -80,7 +80,7 @@ namespace KM.SysControlAdmin.DAL.User___DAL
                 }
 
                 // Guardar el usuario en la base de datos
-                EncryptMD5(user);
+                user.Password = EncryptMD5(user.Password);
                 dbContext.User.Add(user);
                 result = await dbContext.SaveChangesAsync();
             }
@@ -254,7 +254,7 @@ namespace KM.SysControlAdmin.DAL.User___DAL
             var userDb = new User();
             using (var dbContext = new ContextDB())
             {
-                EncryptMD5(user);
+                user.Password = EncryptMD5(user.Password);
                 userDb = await dbContext.User.FirstOrDefaultAsync(
                     u => u.Email == user.Email && u.Password == user.Password
                     && u.Status == 1);
@@ -268,20 +268,29 @@ namespace KM.SysControlAdmin.DAL.User___DAL
         public static async Task<int> ChangePasswordAsync(User user, string oldPassword)
         {
             int result = 0;
-            var userOldPass = new User { Password = oldPassword };
-            EncryptMD5(userOldPass);
+
+            // Encriptar la contraseña antigua recibida
+            string oldPasswordEncrypted = EncryptMD5(oldPassword);
+
             using (var dbContext = new ContextDB())
             {
                 var userDb = await dbContext.User.FirstOrDefaultAsync(u => u.Id == user.Id);
-                if (userOldPass.Password == userDb!.Password)
+                if (userDb == null)
+                    throw new Exception("Usuario no encontrado");
+
+                // Comparar contraseñas encriptadas
+                if (oldPasswordEncrypted == userDb.Password)
                 {
-                    EncryptMD5(user);
-                    userDb.Password = user.Password;
+                    // Encriptar la nueva contraseña del usuario
+                    userDb.Password = EncryptMD5(user.Password);
+
                     dbContext.User.Update(userDb);
                     result = await dbContext.SaveChangesAsync();
                 }
                 else
-                    throw new Exception("Vuelve a Intentarlo Nuevamente");
+                {
+                    throw new Exception("Credencial Incorrecta");
+                }
             }
             return result;
         }
@@ -292,7 +301,7 @@ namespace KM.SysControlAdmin.DAL.User___DAL
         public static async Task<int> ChangePasswordRoleDesAsync(User user)
         {
             int result = 0;
-            EncryptMD5(user); // Encriptamos la nueva contraseña
+            string encryptedPassword = EncryptMD5(user.Password); // Encriptamos la nueva contraseña
             using (var dbContext = new ContextDB())
             {
                 var userDb = await dbContext.User.FirstOrDefaultAsync(u => u.Id == user.Id);
@@ -358,17 +367,16 @@ namespace KM.SysControlAdmin.DAL.User___DAL
                 // Generar contraseña temporal
                 string tempPassword = UtilsPasswordGenerator.GenerateTemporaryPassword();
 
-                // Encriptarla
-                var userToEncrypt = new User { Password = tempPassword };
-                EncryptMD5(userToEncrypt);
+                // Encriptar la contraseña temporal directamente
+                string encryptedTempPassword = EncryptMD5(tempPassword);
 
-                // Asignar la nueva contraseña encriptada
-                user.Password = userToEncrypt.Password;
+                // Asignar la nueva contraseña encriptada al usuario
+                user.Password = encryptedTempPassword;
 
                 // Guardar cambios en DB
                 await dbContext.SaveChangesAsync();
 
-                // Enviar contraseña temporal al correo de recuperación
+                // Enviar contraseña temporal al correo de recuperación (se envía la no encriptada para que el usuario la use)
                 return await UtilsEmailService.SendTemporaryPassword(user.RecoveryEmail, tempPassword);
             }
         }
