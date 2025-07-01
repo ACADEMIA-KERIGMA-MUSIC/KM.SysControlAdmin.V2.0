@@ -118,3 +118,14 @@ CREATE TABLE CourseAssignment(
   DateModification DATETIME NOT NULL,
   );
 GO
+CREATE TABLE Attendance(
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    IdStudent INT NOT NULL FOREIGN KEY REFERENCES Student(Id) ON DELETE CASCADE,
+    IdCourse INT NOT NULL FOREIGN KEY REFERENCES Course(Id) ON DELETE CASCADE,
+    AttendedCount INT NULL,
+    AbsentCount INT NULL,
+    LeaveCount INT NULL,
+    DateCreated DATETIME NOT NULL,
+    DateModification DATETIME NOT NULL,
+    );
+GO
