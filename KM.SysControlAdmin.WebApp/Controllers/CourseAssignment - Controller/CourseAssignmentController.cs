@@ -1,9 +1,11 @@
 ﻿#region REFERENCIAS
 // Referencias Necesarias Para El Correcto Funcionamiento
+using KM.SysControlAdmin.BL.Attendance___BL;
 using KM.SysControlAdmin.BL.Course___BL;
 using KM.SysControlAdmin.BL.CourseAssignment___BL;
 using KM.SysControlAdmin.BL.Student___BL;
 using KM.SysControlAdmin.Core.Utils;
+using KM.SysControlAdmin.EN.Attendance___EN;
 using KM.SysControlAdmin.EN.Course___EN;
 using KM.SysControlAdmin.EN.CourseAssignment___EN;
 using KM.SysControlAdmin.EN.Student___EN;
@@ -23,6 +25,7 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
         CourseAssignmentBL courseAssignmentBL = new CourseAssignmentBL();
         StudentBL studentBL = new StudentBL();
         CourseBL courseBL = new CourseBL();
+        AttendanceBL attendanceBL = new AttendanceBL();
 
         #region METODOS PARA AUTOCOMPLETADO
         // Metod que extrae por Id y devolver a la vista en foramto Json
@@ -100,6 +103,22 @@ namespace KM.SysControlAdmin.WebApp.Controllers.CourseAssignment___Controller
                 courseAssignment.DateCreated = DateTime.Now.GetFechaZonaHoraria();
                 courseAssignment.DateModification = DateTime.Now.GetFechaZonaHoraria();
                 int result = await courseAssignmentBL.CreateAsync(courseAssignment);
+
+                // Crea un nuevo objeto de tipo Attendance y mapear las propiedades
+                var attendance = new Attendance
+                {
+                    IdStudent = courseAssignment.IdStudent,
+                    IdCourse = courseAssignment.IdCourse,
+                    AttendedCount = 0,
+                    AbsentCount = 0,
+                    LeaveCount = 0,
+                    DateCreated = DateTime.Now.GetFechaZonaHoraria(),
+                    DateModification = DateTime.Now.GetFechaZonaHoraria()
+                };
+
+                // Guardar en la tabla Attendance
+                int resultAttendance = await attendanceBL.CreateAsync(attendance);
+
                 TempData["SuccessMessageCreate"] = "Asignacion Agregada Exitosamente";
                 return RedirectToAction(nameof(Index));
             }
