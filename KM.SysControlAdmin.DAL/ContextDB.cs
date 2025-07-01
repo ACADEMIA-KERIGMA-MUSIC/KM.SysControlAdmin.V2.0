@@ -13,6 +13,7 @@ using KM.SysControlAdmin.EN.Trainer___EN;
 using KM.SysControlAdmin.EN.Course___EN;
 using KM.SysControlAdmin.EN.Student___EN;
 using KM.SysControlAdmin.EN.CourseAssignment___EN;
+using KM.SysControlAdmin.EN.Attendance___EN;
 
 
 #endregion
@@ -30,6 +31,7 @@ namespace KM.SysControlAdmin.DAL
         public DbSet<Course> Course { get; set; }
         public DbSet<Student> Student { get; set; }
         public DbSet<CourseAssignment> CourseAssignment { get; set; }
+        public DbSet<Attendance> Attendance { get; set; }
         #endregion
 
         #region STRING DE CONEXION
