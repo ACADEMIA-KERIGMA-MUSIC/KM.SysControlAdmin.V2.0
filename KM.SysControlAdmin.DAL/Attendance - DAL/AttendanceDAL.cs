@@ -213,6 +213,9 @@ namespace KM.SysControlAdmin.DAL.Attendance___DAL
                 // Actualizar la asistencia en la base de datos
                 attendanceDB.IdStudent = attendance.IdStudent;
                 attendanceDB.IdCourse = attendance.IdCourse;
+                attendanceDB.AttendedCount = attendance.AttendedCount;
+                attendanceDB.AbsentCount = attendance.AbsentCount;
+                attendanceDB.LeaveCount = attendance.LeaveCount;
                 attendanceDB.DateModification = attendance.DateModification;
 
                 dbContext.Update(attendanceDB);
@@ -238,6 +241,21 @@ namespace KM.SysControlAdmin.DAL.Attendance___DAL
                 }
             }
             return result;
+        }
+        #endregion
+
+        #region METODO PARA OBTENER POR ID DE ESTUDIANTE Y ID DE CURSO
+        // Metodo Para Obtener Un Registro En Base A Su IdStudiante Y IdCurso
+        public static async Task<Attendance> GetByIdStudentAndCourseAsync(int idStudent, int idCourse)
+        {
+            using (var dbContext = new ContextDB())
+            {
+                var attendance = await dbContext.Attendance.Include(a => a.Student)
+    .Include(a => a.Course).FirstOrDefaultAsync(a => a.IdStudent == idStudent && a.IdCourse == idCourse);
+                if (attendance == null)
+                    throw new Exception("No se encontró registro para el estudiante seleccionado");
+                return attendance;
+            }
         }
         #endregion
     }

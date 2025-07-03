@@ -69,5 +69,13 @@ namespace KM.SysControlAdmin.BL.Attendance___BL
             return await AttendanceDAL.DeleteAsync(attendance);
         }
         #endregion
+
+        #region METODO PARA OBTENER POR ID DE ESTUDIANTE Y ID DE CURSO
+        // Metodo Para Obtener Un Registro En Base A Su IdStudiante Y IdCurso
+        public async Task<Attendance> GetByIdStudentAndCourseAsync(int idStudent, int idCourse)
+        {
+            return await AttendanceDAL.GetByIdStudentAndCourseAsync(idStudent, idCourse);
+        }
+        #endregion
     }
 }
